@@ -1,6 +1,10 @@
-package com.finlay.geomonsters;
+package com.finlay.geomonsters.battle;
 
 import java.util.concurrent.Callable;
+
+import com.finlay.geomonsters.R;
+import com.finlay.geomonsters.R.id;
+import com.finlay.geomonsters.R.layout;
 
 import android.app.Activity;
 import android.os.Bundle;

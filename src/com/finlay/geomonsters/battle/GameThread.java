@@ -1,6 +1,5 @@
-package com.finlay.geomonsters;
+package com.finlay.geomonsters.battle;
 
-import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -70,6 +69,8 @@ public class GameThread extends Thread {
 						framesSkipped++;
 					}
 				}
+			} catch (Exception e) {
+				Log.v(TAG, "Exception: " + e.getMessage());
 			} finally {
 				if (c != null) {
 					_surfaceHolder.unlockCanvasAndPost(c);
