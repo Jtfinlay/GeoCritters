@@ -84,8 +84,13 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	public void render(Canvas canvas) {
 
 		// background
-		_paint.setColor(Color.RED);
+		_paint.setColor(Color.WHITE);
 		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), _paint);
+		
+		
+		// draw ground
+		Bitmap ground = BitmapFactory.decodeResource(getResources(), R.drawable.ground);
+		canvas.drawBitmap(ground, 0, canvas.getHeight()/2+10, _paint);
 
 		// load kangaroo bitmap
 		Bitmap kangoo = BitmapFactory.decodeResource(getResources(), R.drawable.kangaroo);
@@ -93,8 +98,9 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		// matrix to flip horizontally
 		Matrix flipHorizontalMatrix = new Matrix();
 		flipHorizontalMatrix.setScale(-1,1);
-		flipHorizontalMatrix.postTranslate(kangoo.getWidth()+10, (canvas.getHeight() - kangoo.getHeight())/2);
+		flipHorizontalMatrix.postTranslate(kangoo.getWidth()+20, (canvas.getHeight() - kangoo.getHeight())/2);
 		
+		// draw kangoo
 		canvas.drawBitmap(kangoo, flipHorizontalMatrix, _paint);
 	}
 
