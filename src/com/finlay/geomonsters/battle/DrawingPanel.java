@@ -2,6 +2,7 @@ package com.finlay.geomonsters.battle;
 
 import com.finlay.geomonsters.R;
 import com.finlay.geomonsters.R.drawable;
+import com.finlay.geomonsters.creatures.Animation;
 import com.finlay.geomonsters.creatures.Creature;
 
 import android.content.Context;
@@ -144,6 +145,14 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void update() {
 
+	}
+	
+	public void creatureUser_Attack(int attackType) {
+		// TODO: Calculate damage and stuff from Creature class
+		_creatureUser.performAnimation(Animation.STRIKE);
+		_creatureOther.performAnimation(Animation.HURT);
+		_creatureOther.Hurt(10);
+		
 	}
 	
 	

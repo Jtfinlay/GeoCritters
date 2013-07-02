@@ -135,8 +135,7 @@ public class BattleActivity extends Activity {
 			if (thisButton.getText().equals("Fight")) {
 				BtnSetup_Fight();
 			} else if (thisButton.getText().equals("Kick")) {
-				drawingPanel.getCreature_User().performAnimation(Animation.STRIKE);
-				drawingPanel.getCreature_Other().performAnimation(Animation.HURT);
+				drawingPanel.creatureUser_Attack(Animation.STRIKE);
 			}
 		}
 

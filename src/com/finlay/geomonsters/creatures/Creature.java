@@ -45,6 +45,7 @@ public class Creature {
 	}
 	public void Hurt(int amt) {
 		HP -= amt;
+		HP = (HP > 0 ? HP : 0);
 	}	
 	public String getName() {
 		return _name;
