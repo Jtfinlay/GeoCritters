@@ -42,13 +42,15 @@ public class Animation {
 	
 	private void renderFrame_Strike(Canvas c, Paint p) {
 		
-		double time = System.currentTimeMillis() - _startTime;
+		float time = (float) (System.currentTimeMillis() - _startTime);
 		
 		Matrix m = new Matrix();
 		
-		if (time >= 500)
-			m.postTranslate(20, 0);
-		else if (time > 700)
+		if (time < 300)
+			m.postTranslate(-40, 0);
+		else if (time < 700)
+			m.postTranslate(-40 + 40*(time-300)/(700-300), 0);
+		else
 			_currentAnimation = 0;
 		
 		c.drawBitmap(_image, m, p);

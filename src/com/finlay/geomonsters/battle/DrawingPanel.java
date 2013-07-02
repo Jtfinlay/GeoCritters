@@ -17,9 +17,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -126,7 +128,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		// background
 		_paint.setColor(Color.WHITE);
 		canvas.drawRect(0, 0, canvas_width, canvas_height, _paint);
-
+		
 		// draw ground
 		Bitmap ground = BitmapFactory.decodeResource(getResources(), R.drawable.ground);
 		canvas.drawBitmap(ground, 0, canvas_height/2+10, _paint);
@@ -136,7 +138,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.save();
 		canvas.scale(-1f, 1f, .5f*canvas_width, 0);					// flip horizontally
 		dx = (canvas_width - _creatureUser.getWidth() - 20);
-		dy = (canvas_height-_creatureUser.getHeight())/2;							
+		dy = (canvas_height-_creatureUser.getHeight())/2+20;							
 		canvas.translate(dx, dy);									// translate position
 		_creatureUser.render(canvas, _paint);						// position is top-left of image
 		canvas.restore();
@@ -144,7 +146,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		// right creature
 		canvas.save();
 		dx = (canvas_width - _creatureOther.getWidth() - 20);
-		dy = (canvas_height - _creatureOther.getHeight())/2;
+		dy = (canvas_height - _creatureOther.getHeight())/2+20;
 		canvas.translate(dx, dy);									// translate position
 		_creatureOther.render(canvas, _paint);						// position is top-left of image
 		canvas.restore();
@@ -197,7 +199,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 				showMessage(_creatureUser.getName() + " uses " + COMMAND.getName() + ".");
 				_creatureUser.performAnimation(COMMAND.getAnimationType());
 				
-				COMMAND_time = System.currentTimeMillis() + 2000;
+				COMMAND_time = System.currentTimeMillis() + 1000;
 				COMMAND_index++;
 				break;
 			case 1:
