@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -26,6 +27,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private Paint _paint;
 	private Creature _creatureUser, _creatureOther;
 
+	private int canvas_width, canvas_height;
 
 	public DrawingPanel(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
@@ -49,12 +51,19 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.v(TAG, "surfaceChanged");
+		Rect surface = holder.getSurfaceFrame();
+		canvas_width = surface.width();
+		canvas_height = surface.height();
 
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.v(TAG, "surfaceCreated");
+		
+		Rect surface = holder.getSurfaceFrame();
+		canvas_width = surface.width();
+		canvas_height = surface.height();
 
 		_Thread.setRunning(true);
 		_Thread.start();
@@ -100,11 +109,43 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		_creatureUser.render(canvas, _paint, userMatrix);
 		_creatureOther.render(canvas, _paint, enemyMatrix);
 		
+		// draw names
+		_paint.setTextSize(25);
+		_paint.setColor(Color.BLACK);
+		canvas.drawText(_creatureUser.getName(), .05f*canvas.getWidth(), .14f*canvas.getHeight(), _paint);
+		canvas.drawText(_creatureOther.getName(), .58f*canvas.getWidth(), .14f*canvas.getHeight(), _paint);
+		
+		// draw health bars
+		float xi, xf, y, xm;
+		_paint.setStrokeWidth(.01f*canvas.getHeight());
+		
+		xi = .05f*canvas.getWidth();
+		xf = .33f*canvas.getWidth();
+		y = .22f*canvas.getHeight();
+		xm = xi + (xf - xi)*_creatureUser.getHealthPercent();
+		
+		_paint.setColor(Color.GREEN);
+		canvas.drawLine(xi, y, xm, y, _paint);
+		_paint.setColor(Color.RED);
+		canvas.drawLine(xm, y, xf, y, _paint);
+		
+		xi = .58f*canvas.getWidth();
+		xf = .86f*canvas.getWidth();
+		y = .22f*canvas.getHeight();
+		xm = xi + (xf - xi)*_creatureOther.getHealthPercent();
+		
+		_paint.setColor(Color.GREEN);
+		canvas.drawLine(xi, y, xm, y, _paint);
+		_paint.setColor(Color.RED);
+		canvas.drawLine(xm, y, xf, y, _paint);
+		
 
 	}
 
 	public void update() {
 
 	}
+	
+	
 
 }

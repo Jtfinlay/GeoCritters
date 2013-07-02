@@ -32,6 +32,8 @@ public class Creature {
 	private Bitmap _image;
 	private ArrayList<String> _attacks;
 	private Animation _animation;
+	private float Max_HP = 100f;
+	private float HP = Max_HP;
 	
 	public Creature(Resources res, String name) {
 		_name = name;
@@ -41,9 +43,20 @@ public class Creature {
 	public ArrayList<String> getAttackList() {
 		return _attacks;
 	}
-	
+	public void Hurt(int amt) {
+		HP -= amt;
+	}	
 	public String getName() {
 		return _name;
+	}
+	public int getMaxHP() {
+		return (int) Max_HP;
+	}
+	public int getHP() {
+		return (int) HP;
+	}
+	public float getHealthPercent() {
+		return HP / Max_HP;
 	}
 	
 	public Bitmap getImage() {
