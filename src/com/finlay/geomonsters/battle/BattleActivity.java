@@ -66,6 +66,7 @@ public class BattleActivity extends Activity {
 		BtnSetup_Default();
 
 		btn1.setOnClickListener(new MyClickListener());
+		btn4.setOnClickListener(new MyClickListener());
 
 	}
 
@@ -136,6 +137,8 @@ public class BattleActivity extends Activity {
 				BtnSetup_Fight();
 			} else if (thisButton.getText().equals("Kick")) {
 				drawingPanel.creatureUser_Attack(Animation.STRIKE);
+			} else if (thisButton.getText().equals("Flee")) {
+				finish();
 			}
 		}
 
