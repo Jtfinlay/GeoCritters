@@ -8,6 +8,7 @@ import com.finlay.geomonsters.creatures.Creature;
 import com.finlay.geomonsters.creatures.Animation;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -75,6 +76,12 @@ public class BattleActivity extends Activity {
 		btn2.setText("Inventory");
 		btn3.setText("GeoMonsters");
 		btn4.setText("Flee");
+		
+		btn1.setBackgroundColor(Color.WHITE);
+		btn2.setBackgroundColor(Color.WHITE);
+		btn3.setBackgroundColor(Color.WHITE);
+		btn4.setBackgroundColor(Color.WHITE);
+		
 		onBackPress = new Callable<Integer>() {
 			@Override
 			public Integer call() throws Exception {
@@ -177,7 +184,6 @@ public class BattleActivity extends Activity {
 			} else {
 				// must be an attack
 				drawingPanel.performUserAttack(thisButton.getText().toString());
-				BtnSetup_Default();
 			}
 		}
 
@@ -188,6 +194,7 @@ public class BattleActivity extends Activity {
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+					BtnSetup_Default();
 					msgPanel.setVisibility(View.INVISIBLE);
 					btnPanel.setVisibility(View.VISIBLE);
 				}

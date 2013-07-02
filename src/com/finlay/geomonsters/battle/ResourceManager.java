@@ -131,7 +131,7 @@ public class ResourceManager {
 			if (type.getAttribute(KEY_NAME).equals(type_name)) {
 
 				String color = type.getAttribute(KEY_COLOR);
-				Log.v(TAG, color);
+
 				result = Color.parseColor(color);
 				break;
 			}
