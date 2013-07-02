@@ -10,8 +10,10 @@ import com.finlay.geomonsters.creatures.Animation;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -41,17 +43,26 @@ public class BattleActivity extends Activity {
 
 		//setContentView(new DrawingPanel(this));
 		setContentView(R.layout.battle);
-		
+
 		btn1 = (Button) findViewById(R.id.button1);
 		btn2 = (Button) findViewById(R.id.button2);
 		btn3 = (Button) findViewById(R.id.button3);
 		btn4 = (Button) findViewById(R.id.button4);
-		
+
 		btnPanel = (LinearLayout) findViewById(R.id.Buttons);
 		msgPanel = (TextView) findViewById(R.id.MessageView);
 		drawingPanel = (DrawingPanel) findViewById(R.id.BattleView);
-		drawingPanel.giveLayout(btnPanel, msgPanel);
-		
+		drawingPanel.setCustomListener(new MyDrawingPanelListener());
+
+		// send any touch events on bottom menu to the drawingPanel when msgPanel is visible
+		msgPanel.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				Log.v(TAG, "Text touched.");
+				return drawingPanel.onTouchEvent(arg1);
+			}
+		});
+
 		BtnSetup_Default();
 
 		btn1.setOnClickListener(new MyClickListener());
@@ -74,10 +85,10 @@ public class BattleActivity extends Activity {
 
 	}
 	private void BtnSetup_Fight() {
-		
+
 		Creature user_creature = drawingPanel.getCreature_User();
 		ArrayList<String> attacks = user_creature.getAttackList();
-		
+
 		switch(attacks.size()) {
 		case 4:
 			btn4.setText(attacks.get(3));
@@ -125,7 +136,7 @@ public class BattleActivity extends Activity {
 			} else if (thisButton.getText().equals("Inventory")) {
 				// TODO: Inventory
 			} else if (thisButton.getText().equals("GeoMonsters")) {
-				
+
 			} else if (thisButton.getText().equals("Flee")) {
 				finish();
 			} else {
@@ -135,5 +146,27 @@ public class BattleActivity extends Activity {
 			}
 		}
 
+	}
+	class MyDrawingPanelListener implements DrawingPanelListener {
+		@Override
+		public void showButtonView() {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					msgPanel.setVisibility(View.INVISIBLE);
+					btnPanel.setVisibility(View.VISIBLE);
+				}
+			});
+		}
+		@Override
+		public void showMessage(final String s) {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					msgPanel.setVisibility(View.VISIBLE);
+					btnPanel.setVisibility(View.INVISIBLE);
+					msgPanel.setText(s);
+				}
+			});
+		}
 	}
 }

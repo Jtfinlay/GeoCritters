@@ -15,20 +15,17 @@ import android.util.Log;
 import com.finlay.geomonsters.R;
 import com.finlay.geomonsters.XMLParser;
 
-public class Attack {
+public class Attack extends Action {
 	
 	private static final String TAG = "Attack";
-	
-	public String 	_name;
-	public String 	_type;
-	public int 		_animation;
 	
 	public Attack(Resources res, String name) {
 		_name = name;
 		init(res);
 	}
 	
-	private void init(Resources res) {
+	@Override
+	protected void init(Resources res) {
 		
 		try {
 			final String KEY		= "attack";
@@ -37,7 +34,7 @@ public class Attack {
 			final String KEY_ANIME 	= "animation";
 			
 			XMLParser parser = new XMLParser();
-			InputStream resStream = res.openRawResource(R.raw.creatures);
+			InputStream resStream = res.openRawResource(R.raw.attacks);
 			Document doc = parser.getDomElement(resStream);
 			
 			NodeList attacks = doc.getElementsByTagName(KEY);

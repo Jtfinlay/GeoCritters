@@ -70,7 +70,7 @@ public class GameThread extends Thread {
 					}
 				}
 			} catch (Exception e) {
-				Log.v(TAG, "Exception: " + e.getMessage());
+				Log.e(TAG, e.getMessage());
 			} finally {
 				if (c != null) {
 					_surfaceHolder.unlockCanvasAndPost(c);
