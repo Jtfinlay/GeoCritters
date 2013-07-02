@@ -31,12 +31,13 @@ public class Creature {
 	private String _name;
 	private Bitmap _image;
 	private ArrayList<String> _attacks;
+	private Animation _animation;
 	
 	public Creature(Resources res, String name) {
 		_name = name;
 		init(res);		
+		_animation = new Animation(_image);
 	}
-	
 	public ArrayList<String> getAttackList() {
 		return _attacks;
 	}
@@ -55,11 +56,14 @@ public class Creature {
 		return _image.getHeight();
 	}
 	public void render(Canvas c, Paint p, Matrix m) {
-		c.drawBitmap(_image, m, p);
+		_animation.renderFrame(c, m, p);
 	}
-	
-	
-
+	public void performAnimation(int animID) {
+		// 0 - Nothing
+		// 1 - Hurt
+		// 2 - Strike
+		_animation.start(animID);
+	}
 	private void init(Resources res) {
 		_attacks = new ArrayList<String>();
 		

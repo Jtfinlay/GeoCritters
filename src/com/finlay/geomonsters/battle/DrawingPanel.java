@@ -82,7 +82,6 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		_paint.setColor(Color.WHITE);
 		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), _paint);
 
-
 		// draw ground
 		Bitmap ground = BitmapFactory.decodeResource(getResources(), R.drawable.ground);
 		canvas.drawBitmap(ground, 0, canvas.getHeight()/2+10, _paint);
