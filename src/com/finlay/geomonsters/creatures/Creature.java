@@ -15,43 +15,86 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.util.Log;
 
 import com.finlay.geomonsters.R;
+import com.finlay.geomonsters.XMLParser;
 
 public class Creature {
 
 	private static final String TAG = "Creature";
+	private String _name;
+	private Bitmap _image;
+	private ArrayList<String> _attacks;
+	
+	public Creature(Resources res, String name) {
+		_name = name;
+		init(res);		
+	}
+	
+	public ArrayList<String> getAttackList() {
+		return _attacks;
+	}
+	
+	public String getName() {
+		return _name;
+	}
+	
+	public Bitmap getImage() {
+		return _image;
+	}
+	public int getWidth() {
+		return _image.getWidth();
+	}
+	public int getHeight() {
+		return _image.getHeight();
+	}
+	public void render(Canvas c, Paint p, Matrix m) {
+		c.drawBitmap(_image, m, p);
+	}
+	
+	
 
-	public ArrayList<String> getAttackList(Resources res, String name) {
-		ArrayList<String> attacks = new ArrayList<String>();
+	private void init(Resources res) {
+		_attacks = new ArrayList<String>();
 		
 		try {
 			final String KEY_CREATURE = "creature";
 			final String KEY_NAME = "name";
 			final String KEY_ATTACK = "attack";
+			final String KEY_IMAGE = "image";
 			
 			XMLParser parser = new XMLParser();
 			InputStream resStream = res.openRawResource(R.raw.creatures);
 			Document doc = parser.getDomElement(resStream);
 			
 			NodeList creatures = doc.getElementsByTagName(KEY_CREATURE);
-			Log.v(TAG, "Creatures: " +creatures.getLength());
 			
 			// cycle through creatures
 			for (int i=0; i < creatures.getLength(); i++) {
 				
 				Element creature = (Element) creatures.item(i);
-				Log.v(TAG, "Name is " + creature.getAttribute(KEY_NAME));
 				
 				// is this the creature?
-				if (creature.getAttribute(KEY_NAME).equals(name)) {
+				if (creature.getAttribute(KEY_NAME).equals(_name)) {
 					
-					// add all attacks to the list
+					// load all attacks
 					NodeList childs = creature.getElementsByTagName(KEY_ATTACK);
 					for (int c = 0; c < childs.getLength(); c++)
-						attacks.add(parser.getElementValue(childs.item(c)));
-					return attacks;
+						_attacks.add(parser.getElementValue(childs.item(c)));
+					
+					// image source
+					String imageName = parser.getElementValue(creature.getElementsByTagName(KEY_IMAGE).item(0));
+					int resID = res.getIdentifier(imageName, "drawable", "com.finlay.geomonsters");
+					_image = BitmapFactory.decodeResource(res, resID);
+					
+					
+					return;
 				}
 			}
 			
@@ -60,6 +103,6 @@ public class Creature {
 			Log.v(TAG, e.getMessage());
 		}
 		
-		return attacks;
 	}
+
 }

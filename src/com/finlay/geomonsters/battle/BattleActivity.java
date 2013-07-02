@@ -38,6 +38,7 @@ public class BattleActivity extends Activity {
 	private static final String TAG = "BattleActivity";
 
 	private Button btn1, btn2, btn3, btn4;
+	private DrawingPanel drawingPanel;
 
 	Callable<Integer> onBackPress;
 
@@ -58,6 +59,8 @@ public class BattleActivity extends Activity {
 		btn2 = (Button) findViewById(R.id.button2);
 		btn3 = (Button) findViewById(R.id.button3);
 		btn4 = (Button) findViewById(R.id.button4);
+		
+		drawingPanel = (DrawingPanel) findViewById(R.id.BattleView);
 
 		BtnSetup_Default();
 
@@ -81,8 +84,8 @@ public class BattleActivity extends Activity {
 	}
 	private void BtnSetup_Fight() {
 		
-		Creature kangoo = new Creature();
-		ArrayList<String> attacks = kangoo.getAttackList(getResources(), "Kangoo");
+		Creature user_creature = drawingPanel.getCreature_User();
+		ArrayList<String> attacks = user_creature.getAttackList();
 		
 		switch(attacks.size()) {
 		case 4:

@@ -8,7 +8,16 @@
     	<attack>Hop</attack>
         <attack>Kick-Punch</attack>
         
-        <image>R.drawable.kangaroo</image>
+        <image>kangaroo</image>
     </creature>
     
+    <creature name="Squirtle">
+        <type>water</type>
+        <attack>Tackle</attack>
+        <attack>Bubble</attack>
+        <attack>Watergun</attack>
+        <attack>Surf</attack>
+        
+        <image>squirtle</image>
+    </creature>
 </resources>

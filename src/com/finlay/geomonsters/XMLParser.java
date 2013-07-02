@@ -1,4 +1,4 @@
-package com.finlay.geomonsters.creatures;
+package com.finlay.geomonsters;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,8 +21,6 @@ import com.finlay.geomonsters.R;
 public class XMLParser {
 
 	private static final String TAG = "XMLParser";
-
-
 
 	public Document getDomElement(InputStream resStream){
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
