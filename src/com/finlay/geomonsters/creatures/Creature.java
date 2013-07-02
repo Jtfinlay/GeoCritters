@@ -35,9 +35,10 @@ public class Creature {
 	private float Max_HP = 100f;
 	private float HP = Max_HP;
 	
-	public Creature(Resources res, String name) {
+	public Creature(String name, Bitmap image, ArrayList<String> attacks) {
 		_name = name;
-		init(res);		
+		_image = image;
+		_attacks = attacks;
 		_animation = new Animation(_image);
 	}
 	public ArrayList<String> getAttackList() {
@@ -78,49 +79,6 @@ public class Creature {
 		// 2 - Strike
 		_animation.start(animID);
 	}
-	private void init(Resources res) {
-		_attacks = new ArrayList<String>();
-		
-		try {
-			final String KEY_CREATURE = "creature";
-			final String KEY_NAME = "name";
-			final String KEY_ATTACK = "attack";
-			final String KEY_IMAGE = "image";
-			
-			XMLParser parser = new XMLParser();
-			InputStream resStream = res.openRawResource(R.raw.creatures);
-			Document doc = parser.getDomElement(resStream);
-			
-			NodeList creatures = doc.getElementsByTagName(KEY_CREATURE);
-			
-			// cycle through creatures
-			for (int i=0; i < creatures.getLength(); i++) {
-				
-				Element creature = (Element) creatures.item(i);
-				
-				// is this the creature?
-				if (creature.getAttribute(KEY_NAME).equals(_name)) {
-					
-					// load all attacks
-					NodeList childs = creature.getElementsByTagName(KEY_ATTACK);
-					for (int c = 0; c < childs.getLength(); c++)
-						_attacks.add(parser.getElementValue(childs.item(c)));
-					
-					// image source
-					String imageName = parser.getElementValue(creature.getElementsByTagName(KEY_IMAGE).item(0));
-					int resID = res.getIdentifier(imageName, "drawable", "com.finlay.geomonsters");
-					_image = BitmapFactory.decodeResource(res, resID);
-					
-					
-					return;
-				}
-			}
-			
-			resStream.close();
-		} catch(IOException e) {
-			Log.v(TAG, e.getMessage());
-		}
-		
-	}
+	
 
 }

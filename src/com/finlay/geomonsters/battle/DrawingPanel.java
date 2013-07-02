@@ -54,8 +54,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		super(context, attributeSet);
 
 		getHolder().addCallback(this);
-		_creatureUser = new Creature(getResources(), "Kangoo");
-		_creatureOther = new Creature(getResources(), "Squirtle");
+		_creatureUser = ResourceManager.newCreature(getResources(), "Kangoo");
+		_creatureOther = ResourceManager.newCreature(getResources(), "Squirtle");
 
 		_paint = new Paint();
 		_Thread = new GameThread(getHolder(), this);	
@@ -190,7 +190,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 
 		if (COMMAND != null && System.currentTimeMillis() > COMMAND_time) {
-			Log.v(TAG, "Command: " + COMMAND_index);
+
 			switch (COMMAND_index) {
 			case 0:
 				// Shows attack message & animation

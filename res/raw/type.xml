@@ -2,60 +2,60 @@
 <resources>
 
     <!-- All attacks have 5-star rating of how well they hit against each element. 0 means no damage ever -->
-    
-    <element name="normal">  
-        <normal>3</normal>
-        <water>3</water>
-        <fire>3</fire>
-        <ground>1</ground>
-        <lightning>3</lightning>
-        <grass>3</grass>      
-    </element>
-    
-    <element name="water">
-        <normal>3</normal>
-        <water>2</water>
-        <fire>5</fire>
-        <ground>4</ground>
-        <lightning>2</lightning>
-        <grass>1</grass>
-    </element>
-    
-    <element name="fire">
-        <normal>3</normal>
-        <water>1</water>
-        <fire>2</fire>
-        <ground>3</ground>
-        <lightning>3</lightning>
-        <grass>5</grass>
-    </element>
-    
-    <element name="ground">
-        <normal>4</normal>
-        <water>2</water>
-        <fire>3</fire>
-        <ground>4</ground>
-        <lightning>5</lightning>
-        <grass>1</grass>
-    </element>
-    
-    <element name="lightning">
-        <normal>3</normal>
-        <water>5</water>
-        <fire>3</fire>
-        <ground>0</ground>
-        <lightning>2</lightning>
-        <grass>2</grass>
-    </element>
-    
-    <element name="grass">
-        <normal>3</normal>
-        <water>4</water>
-        <fire>1</fire>
-        <ground>5</ground>
-        <lightning>3</lightning>
-        <grass>2</grass>
-    </element>
-    
-    
+
+    <element
+        name="normal"
+        fire="3"
+        grass="3"
+        ground="1"
+        lightening="3"
+        normal="3"
+        water="3"
+        color="#ffffff" />
+    <element
+        name="water"
+        fire="5"
+        grass="1"
+        ground="4"
+        lightning="2"
+        normal="3"
+        water="2"
+        color="#c0f1ff" />
+    <element
+        name="fire"
+        fire="2"
+        grass="5"
+        ground="3"
+        lightning="3"
+        normal="3"
+        water="1"
+        color="#f0c9c9" />
+    <element
+        name="ground"
+        fire="3"
+        grass="1"
+        ground="4"
+        lightning="5"
+        normal="4"
+        water="2"
+        color="#e3dcd2" />
+    <element
+        name="lightning"
+        fire="3"
+        grass="2"
+        ground="0"
+        lightning="2"
+        normal="3"
+        water="5"
+        color="#f5f9b8" />
+    <element
+        name="grass"
+        fire="1"
+        grass="2"
+        ground="5"
+        lightning="3"
+        normal="3"
+        water="4"
+        color="#b8f9c4" />
+
 </resources>

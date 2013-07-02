@@ -3,19 +3,19 @@
 
     <attack
         name="Kick"
-        animation="0"
+        animation="2"
         type="normal" />
     <attack
         name="Bubble"
-        animation="0"
+        animation="2"
         type="water" />
     <attack
-        name="PokeWithStick"
-        animation="0"
+        name="Stick Poke"
+        animation="2"
         type="grass" />
     <attack
         name="Creme Brulee"
-        animation="0"
+        animation="2"
         type="fire" />
 
 </resources>

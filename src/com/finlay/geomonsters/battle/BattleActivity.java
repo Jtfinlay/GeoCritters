@@ -88,18 +88,53 @@ public class BattleActivity extends Activity {
 
 		Creature user_creature = drawingPanel.getCreature_User();
 		ArrayList<String> attacks = user_creature.getAttackList();
+		
+		// TODO: Set button colours as well
+		
+		// Set button values to the attacks
 
 		switch(attacks.size()) {
-		case 4:
-			btn4.setText(attacks.get(3));
-		case 3:
-			btn3.setText(attacks.get(2));
-		case 2: 
-			btn2.setText(attacks.get(1));
-		case 1:
-			btn1.setText(attacks.get(0));
 		case 0:
 			Log.e(TAG, "No Attacks found for creature " + "Kangoo");
+			break;
+		case 1:
+			btn1.setText(attacks.get(0));
+			btn2.setVisibility(View.INVISIBLE);
+			btn3.setVisibility(View.INVISIBLE);
+			btn4.setVisibility(View.INVISIBLE);
+			
+			btn1.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
+			break;
+		case 2:
+			btn1.setText(attacks.get(0));
+			btn2.setText(attacks.get(1));
+			btn3.setVisibility(View.INVISIBLE);
+			btn4.setVisibility(View.INVISIBLE);
+			
+			btn1.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
+			btn2.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
+			break;
+		case 3:
+			btn1.setText(attacks.get(0));
+			btn2.setText(attacks.get(1));
+			btn3.setText(attacks.get(2));
+			btn4.setVisibility(View.INVISIBLE);
+		
+			btn1.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
+			btn2.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(1)));
+			btn3.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(2)));
+			break;
+		case 4:
+			btn1.setText(attacks.get(0));
+			btn2.setText(attacks.get(1));
+			btn3.setText(attacks.get(2));
+			btn4.setText(attacks.get(3));
+			
+			btn1.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
+			btn2.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(1)));
+			btn3.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(2)));
+			btn4.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(3)));
+			break;
 		}
 
 		onBackPress = new Callable<Integer>() {

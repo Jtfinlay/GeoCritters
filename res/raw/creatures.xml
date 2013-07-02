@@ -5,7 +5,7 @@
         <type>ground</type>
         <attack>Kick</attack>
         <attack>Bubble</attack>
-    	<attack>PokeWithStick</attack>
+    	<attack>Stick Poke</attack>
         <attack>Creme Brulee</attack>
         
         <image>kangaroo</image>
@@ -15,7 +15,7 @@
         <type>water</type>
         <attack>Kick</attack>
         <attack>Bubble</attack>
-    	<attack>PokeWithStick</attack>
+    	<attack>Stick Poke</attack>
         <attack>Creme Brulee</attack>
         
         <image>squirtle</image>
