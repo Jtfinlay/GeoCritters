@@ -4,19 +4,19 @@
     <creature name="Kangoo">
         <type>ground</type>
         <attack>Kick</attack>
-        <attack>Punch</attack>
-    	<attack>Hop</attack>
-        <attack>Kick-Punch</attack>
+        <attack>Bubble</attack>
+    	<attack>PokeWithStick</attack>
+        <attack>Creme Brulee</attack>
         
         <image>kangaroo</image>
     </creature>
     
     <creature name="Squirtle">
         <type>water</type>
-        <attack>Tackle</attack>
+        <attack>Kick</attack>
         <attack>Bubble</attack>
-        <attack>Watergun</attack>
-        <attack>Surf</attack>
+    	<attack>PokeWithStick</attack>
+        <attack>Creme Brulee</attack>
         
         <image>squirtle</image>
     </creature>

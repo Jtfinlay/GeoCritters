@@ -11,44 +11,63 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-    <LinearLayout
-        android:id="@+id/Actions"
-        android:layout_width="fill_parent"
+    <RelativeLayout
+        android:id="@+id/Bottom_Panel"
+        android:layout_width = "fill_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:orientation="horizontal" >
+        android:layout_weight="3">
 
-        <Button
-            android:id="@+id/button1"
+        <LinearLayout
+            android:id="@+id/Buttons"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dip"
-            android:layout_marginTop="10dip"
-            android:layout_weight="1" />
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" 
+            android:visibility="invisible">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dip"
-            android:layout_marginTop="10dip"
-            android:layout_weight="1" />
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginTop="10dip"
+                android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dip"
-            android:layout_marginTop="10dip"
-            android:layout_weight="1" />
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginTop="10dip"
+                android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dip"
-            android:layout_marginTop="10dip"
-            android:layout_weight="1" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginTop="10dip"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dip"
+                android:layout_marginTop="10dip"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/MessageView"
+            style="@style/CodeFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="0dp"
+            android:text="This is example text."
+            android:padding="10dp"
+            android:textAppearance="@style/CodeFont"
+            android:visibility="visible" />
+
+    </RelativeLayout>
 
 </LinearLayout>

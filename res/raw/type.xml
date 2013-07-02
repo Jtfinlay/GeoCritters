@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- All attacks have 5-star rating of how well they hit against each element. 0 means no damage ever -->
+    
+    <element name="normal">  
+        <normal>3</normal>
+        <water>3</water>
+        <fire>3</fire>
+        <ground>1</ground>
+        <lightning>3</lightning>
+        <grass>3</grass>      
+    </element>
+    
+    <element name="water">
+        <normal>3</normal>
+        <water>2</water>
+        <fire>5</fire>
+        <ground>4</ground>
+        <lightning>2</lightning>
+        <grass>1</grass>
+    </element>
+    
+    <element name="fire">
+        <normal>3</normal>
+        <water>1</water>
+        <fire>2</fire>
+        <ground>3</ground>
+        <lightning>3</lightning>
+        <grass>5</grass>
+    </element>
+    
+    <element name="ground">
+        <normal>4</normal>
+        <water>2</water>
+        <fire>3</fire>
+        <ground>4</ground>
+        <lightning>5</lightning>
+        <grass>1</grass>
+    </element>
+    
+    <element name="lightning">
+        <normal>3</normal>
+        <water>5</water>
+        <fire>3</fire>
+        <ground>0</ground>
+        <lightning>2</lightning>
+        <grass>2</grass>
+    </element>
+    
+    <element name="grass">
+        <normal>3</normal>
+        <water>4</water>
+        <fire>1</fire>
+        <ground>5</ground>
+        <lightning>3</lightning>
+        <grass>2</grass>
+    </element>
+    
+    
+</resources>

@@ -1,38 +1,22 @@
 package com.finlay.geomonsters.battle;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
 import com.finlay.geomonsters.R;
-import com.finlay.geomonsters.R.id;
-import com.finlay.geomonsters.R.layout;
 import com.finlay.geomonsters.creatures.Creature;
 import com.finlay.geomonsters.creatures.Animation;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Xml;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class BattleActivity extends Activity {
 
@@ -40,6 +24,8 @@ public class BattleActivity extends Activity {
 
 	private Button btn1, btn2, btn3, btn4;
 	private DrawingPanel drawingPanel;
+	private LinearLayout btnPanel;
+	private TextView msgPanel;
 
 	Callable<Integer> onBackPress;
 
@@ -55,14 +41,17 @@ public class BattleActivity extends Activity {
 
 		//setContentView(new DrawingPanel(this));
 		setContentView(R.layout.battle);
-
+		
 		btn1 = (Button) findViewById(R.id.button1);
 		btn2 = (Button) findViewById(R.id.button2);
 		btn3 = (Button) findViewById(R.id.button3);
 		btn4 = (Button) findViewById(R.id.button4);
 		
+		btnPanel = (LinearLayout) findViewById(R.id.Buttons);
+		msgPanel = (TextView) findViewById(R.id.MessageView);
 		drawingPanel = (DrawingPanel) findViewById(R.id.BattleView);
-
+		drawingPanel.giveLayout(btnPanel, msgPanel);
+		
 		BtnSetup_Default();
 
 		btn1.setOnClickListener(new MyClickListener());
@@ -112,7 +101,6 @@ public class BattleActivity extends Activity {
 
 	}
 
-
 	@Override
 	public void onBackPressed() {
 
@@ -126,7 +114,6 @@ public class BattleActivity extends Activity {
 
 	}
 
-
 	class MyClickListener implements OnClickListener {
 
 		@Override
@@ -135,10 +122,16 @@ public class BattleActivity extends Activity {
 
 			if (thisButton.getText().equals("Fight")) {
 				BtnSetup_Fight();
-			} else if (thisButton.getText().equals("Kick")) {
-				drawingPanel.creatureUser_Attack(Animation.STRIKE);
+			} else if (thisButton.getText().equals("Inventory")) {
+				// TODO: Inventory
+			} else if (thisButton.getText().equals("GeoMonsters")) {
+				
 			} else if (thisButton.getText().equals("Flee")) {
 				finish();
+			} else {
+				// must be an attack
+				drawingPanel.performUserAttack(thisButton.getText().toString());
+				BtnSetup_Default();
 			}
 		}
 
