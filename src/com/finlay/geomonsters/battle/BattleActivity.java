@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import com.finlay.geomonsters.R;
-import com.finlay.geomonsters.creatures.Creature;
-import com.finlay.geomonsters.creatures.Animation;
 
 import android.app.Activity;
 import android.graphics.Color;

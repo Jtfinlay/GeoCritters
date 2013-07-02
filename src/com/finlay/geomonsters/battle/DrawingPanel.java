@@ -9,8 +9,6 @@ import java.util.concurrent.Callable;
 
 import com.finlay.geomonsters.R;
 import com.finlay.geomonsters.R.drawable;
-import com.finlay.geomonsters.creatures.Animation;
-import com.finlay.geomonsters.creatures.Creature;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -206,7 +204,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 				// Say it is super effective or w/e
 				showMessage("It might have been super effective!");
 				_creatureOther.performAnimation(Animation.HURT);
-				COMMAND_time = System.currentTimeMillis() + 1500;
+				COMMAND_time = System.currentTimeMillis() + 1000;
 				COMMAND_index++;
 				break;
 			case 2:
@@ -233,7 +231,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		
 		COMMAND_time = 0;
 		COMMAND_index = 0;
-		COMMAND = new Attack(getResources(), attackName);
+		COMMAND = ResourceManager.getAttack(getResources(), attackName);
 
 	}
 	

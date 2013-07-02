@@ -19,47 +19,11 @@ public class Attack extends Action {
 	
 	private static final String TAG = "Attack";
 	
-	public Attack(Resources res, String name) {
+	public Attack(String name, String type, int animation) {
 		_name = name;
-		init(res);
+		_type = type;
+		_animation = animation;
 	}
 	
-	@Override
-	protected void init(Resources res) {
-		
-		try {
-			final String KEY		= "attack";
-			final String KEY_NAME	= "name";
-			final String KEY_TYPE 	= "type";
-			final String KEY_ANIME 	= "animation";
-			
-			XMLParser parser = new XMLParser();
-			InputStream resStream = res.openRawResource(R.raw.attacks);
-			Document doc = parser.getDomElement(resStream);
-			
-			NodeList attacks = doc.getElementsByTagName(KEY);
-			
-			// cycle through creatures
-			for (int i=0; i < attacks.getLength(); i++) {
-				
-				Element attack = (Element) attacks.item(i);
-				
-				// is this the attack?
-				if (attack.getAttribute(KEY_NAME).equals(_name)) {
-					
-					// get attributes
-					_type 		= attack.getAttribute(KEY_TYPE);
-					_animation 	= Integer.parseInt(attack.getAttribute(KEY_ANIME));
-
-					break;
-				}
-			}
-			
-			resStream.close();
-		} catch(IOException e) {
-			Log.v(TAG, e.getMessage());
-		}
-		
-	}
 
 }

@@ -15,7 +15,6 @@ import android.util.Log;
 
 import com.finlay.geomonsters.R;
 import com.finlay.geomonsters.XMLParser;
-import com.finlay.geomonsters.creatures.Creature;
 
 public class ResourceManager {
 
@@ -71,6 +70,48 @@ public class ResourceManager {
 
 	}
 
+	public static Attack getAttack(Resources res, String attack_name) {
+		
+		Attack result = null;
+		
+		try {
+			final String KEY		= "attack";
+			final String KEY_NAME	= "name";
+			final String KEY_TYPE	= "type";
+			final String KEY_ANIME	= "animation";
+
+			XMLParser parser = new XMLParser();
+			InputStream resStream = res.openRawResource(R.raw.attacks);
+			Document doc = parser.getDomElement(resStream);
+			
+			NodeList attacks = doc.getElementsByTagName(KEY);
+			
+			// cycle through creatures
+			for (int i=0; i < attacks.getLength(); i++) {
+				
+				Element attack = (Element) attacks.item(i);
+				
+				// is this the attack?
+				if (attack.getAttribute(KEY_NAME).equals(attack_name)) {
+					
+					// get attributes
+					String type 	= attack.getAttribute(KEY_TYPE);
+					int animation 	= Integer.parseInt(attack.getAttribute(KEY_ANIME));
+
+					result = new Attack(attack_name, type, animation);
+					break;
+				}
+			}
+			
+			resStream.close();
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		}
+		
+		
+		return result;
+	}
+	
 	public static int getColorOfAttack(Resources res, String attack_name) {
 
 		int result = 0;

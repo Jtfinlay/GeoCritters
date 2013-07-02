@@ -1,4 +1,4 @@
-package com.finlay.geomonsters.creatures;
+package com.finlay.geomonsters.battle;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

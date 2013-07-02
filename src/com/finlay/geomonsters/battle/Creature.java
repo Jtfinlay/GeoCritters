@@ -1,4 +1,4 @@
-package com.finlay.geomonsters.creatures;
+package com.finlay.geomonsters.battle;
 
 import java.io.IOException;
 import java.io.InputStream;
