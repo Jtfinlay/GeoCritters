@@ -67,6 +67,8 @@ public class BattleActivity extends Activity {
 		BtnSetup_Default();
 
 		btn1.setOnClickListener(new MyClickListener());
+		btn2.setOnClickListener(new MyClickListener());
+		btn3.setOnClickListener(new MyClickListener());
 		btn4.setOnClickListener(new MyClickListener());
 
 	}
@@ -172,13 +174,13 @@ public class BattleActivity extends Activity {
 		@Override
 		public void onClick(View arg0) {
 			Button thisButton = (Button) arg0;
-
+			Log.v(TAG, "onClick: " + thisButton.getText());
 			if (thisButton.getText().equals("Fight")) {
 				BtnSetup_Fight();
 			} else if (thisButton.getText().equals("Inventory")) {
 				// TODO: Inventory
 			} else if (thisButton.getText().equals("GeoMonsters")) {
-
+				// TODO: GeoMonsters
 			} else if (thisButton.getText().equals("Flee")) {
 				finish();
 			} else {
