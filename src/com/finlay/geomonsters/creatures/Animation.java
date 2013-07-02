@@ -24,28 +24,30 @@ public class Animation {
 		_startTime = System.currentTimeMillis();
 	}
 	
-	public void renderFrame(Canvas c, Matrix m, Paint p) {
+	public void renderFrame(Canvas c, Paint p) {
 		
 		switch (_currentAnimation) {
 		case NONE:
-			c.drawBitmap(_image, m, p);
+			c.drawBitmap(_image, 0, 0, p);
 			break;
 		case HURT:
-			renderFrame_Hurt(c, m, p);
+			renderFrame_Hurt(c, p);
 			break;
 		case STRIKE:
-			renderFrame_Strike(c, m, p);
+			renderFrame_Strike(c, p);
 			break;
 		}
 		
 	}
 	
-	private void renderFrame_Strike(Canvas c, Matrix m, Paint p) {
+	private void renderFrame_Strike(Canvas c, Paint p) {
 		
 		double time = System.currentTimeMillis() - _startTime;
 		
+		Matrix m = new Matrix();
+		
 		if (time >= 500)
-			m.postTranslate(-20, 0);
+			m.postTranslate(20, 0);
 		else if (time > 700)
 			_currentAnimation = 0;
 		
@@ -53,9 +55,11 @@ public class Animation {
 		
 	}
 	
-	private void renderFrame_Hurt(Canvas c, Matrix m, Paint p) {
+	private void renderFrame_Hurt(Canvas c, Paint p) {
 		
 		double time = System.currentTimeMillis() - _startTime;
+		
+		Matrix m = new Matrix();
 		
 		if (time > 400) {
 			_currentAnimation = 0;

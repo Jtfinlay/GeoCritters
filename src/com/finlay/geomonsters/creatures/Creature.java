@@ -69,8 +69,8 @@ public class Creature {
 	public int getHeight() {
 		return _image.getHeight();
 	}
-	public void render(Canvas c, Paint p, Matrix m) {
-		_animation.renderFrame(c, m, p);
+	public void render(Canvas c, Paint p) {
+		_animation.renderFrame(c, p);
 	}
 	public void performAnimation(int animID) {
 		// 0 - Nothing

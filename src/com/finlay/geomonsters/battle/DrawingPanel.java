@@ -41,7 +41,9 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	private DrawingPanelListener customListener;
 
-	private boolean PERFORM_COMMAND = false;			// Tell update to start next command. Touch Event sets to true
+	/**
+	 * Variables for managing action cycles
+	 */
 	private int 	COMMAND_index 	= 0;
 	private long 	COMMAND_time 	= -1;
 	private Action	COMMAND;
@@ -67,6 +69,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	public Creature getCreature_Other() {
 		return _creatureOther;
 	}
+	
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.v(TAG, "surfaceChanged");
@@ -112,8 +115,14 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		return true;
 	}
 
+	/**
+	 * Draw
+	 * @param canvas
+	 */
 	public void render(Canvas canvas) {
 
+		float dx, dy;
+		
 		// background
 		_paint.setColor(Color.WHITE);
 		canvas.drawRect(0, 0, canvas_width, canvas_height, _paint);
@@ -123,19 +132,24 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.drawBitmap(ground, 0, canvas_height/2+10, _paint);
 		canvas.drawBitmap(ground, (canvas_width - ground.getWidth()), canvas_height/2+10, _paint);
 
-		// matrix to flip horizontally
-		Matrix userMatrix = new Matrix();
-		userMatrix.setScale(-1,1);
-		userMatrix.postTranslate(_creatureUser.getWidth()+20, (canvas_height - _creatureUser.getHeight())/2);
-
-		// matrix to put on left side
-		Matrix enemyMatrix = new Matrix();
-		enemyMatrix.postTranslate((canvas_width - _creatureOther.getWidth()-20), (canvas_height - _creatureOther.getHeight())/2);
-
-		// draw creatures
-		_creatureUser.render(canvas, _paint, userMatrix);
-		_creatureOther.render(canvas, _paint, enemyMatrix);
-
+		// left creature
+		canvas.save();
+		canvas.scale(-1f, 1f, .5f*canvas_width, 0);					// flip horizontally
+		dx = (canvas_width - _creatureUser.getWidth() - 20);
+		dy = (canvas_height-_creatureUser.getHeight())/2;							
+		canvas.translate(dx, dy);									// translate position
+		_creatureUser.render(canvas, _paint);						// position is top-left of image
+		canvas.restore();
+		
+		// right creature
+		canvas.save();
+		dx = (canvas_width - _creatureOther.getWidth() - 20);
+		dy = (canvas_height - _creatureOther.getHeight())/2;
+		canvas.translate(dx, dy);									// translate position
+		_creatureOther.render(canvas, _paint);						// position is top-left of image
+		canvas.restore();
+		
+		
 		// draw names
 		_paint.setTextSize(25);
 		_paint.setColor(Color.BLACK);
@@ -170,7 +184,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	/**
-	 * If PERFORM_COMMAND is true, pop and execute the first method in COMMANDS
+	 * Cycle through actions to perform
 	 */
 	public void update() {
 
@@ -211,35 +225,34 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	/**
-	 * Local player has used an attack. Called by BattleActivity
+	 * Local player uses an attack. Called by BattleActivity
 	 */
 	public void performUserAttack(String attackName) {
-
-		// Get attack info
-		Attack attack = new Attack(getResources(), attackName);
 		
-		
-		
-		PERFORM_COMMAND = true;
 		COMMAND_time = 0;
 		COMMAND_index = 0;
-		COMMAND = attack;
-
+		COMMAND = new Attack(getResources(), attackName);
 
 	}
 	
-	private void wait(double until) {
-		if (System.currentTimeMillis() > until)
-			PERFORM_COMMAND = true;
-	}
+	/**
+	 * Uses DrawingPanelListener interface to send information to the bottom panel.
+	 * @param listen
+	 */
 	public void setCustomListener(DrawingPanelListener listen) {
 		customListener = listen;
 	}
-	public void showMessage(String message) {
+	/**
+	 * Write message on bottom panel
+	 * @param message
+	 */
+	private void showMessage(String message) {
 		customListener.showMessage(message);
 	}
-
-	public void showButtons() {
+	/**
+	 * Hide TextView, show action buttons
+	 */
+	private void showButtons() {
 		customListener.showButtonView();
 	}
 
