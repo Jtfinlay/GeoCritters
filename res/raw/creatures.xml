@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <creature name="Kangoo">
+        <type>ground</type>
+        <attack>Kick</attack>
+        <attack>Punch</attack>
+    	<attack>Hop</attack>
+        <attack>Kick-Punch</attack>
+        
+        <image>R.drawable.kangaroo</image>
+    </creature>
+    
+</resources>

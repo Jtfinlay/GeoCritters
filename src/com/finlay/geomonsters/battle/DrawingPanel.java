@@ -95,6 +95,9 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		// load kangaroo bitmap
 		Bitmap kangoo = BitmapFactory.decodeResource(getResources(), R.drawable.kangaroo);
 		
+		
+		
+		
 		// matrix to flip horizontally
 		Matrix flipHorizontalMatrix = new Matrix();
 		flipHorizontalMatrix.setScale(-1,1);
@@ -102,6 +105,11 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		
 		// draw kangoo
 		canvas.drawBitmap(kangoo, flipHorizontalMatrix, _paint);
+		
+		// kangoo name
+		_paint.setColor(Color.BLACK);
+		_paint.setTextSize(30);
+		canvas.drawText("Kangoo", 40, 40, _paint);
 	}
 
 	public void update() {
