@@ -1,34 +1,18 @@
 package com.finlay.geomonsters.battle;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.Callable;
-
 import com.finlay.geomonsters.R;
-import com.finlay.geomonsters.R.drawable;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 /*----- The drawing surface -----*/
 class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
@@ -41,12 +25,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	private DrawingPanelListener customListener;
 
-	/**
-	 * Variables for managing action cycles
-	 */
-	private int 	COMMAND_index 	= 0;
-	private long 	COMMAND_time 	= -1;
-	private Action	COMMAND;
+	private Action	COMMAND;							// For managing action cycle
 
 	private int canvas_width, canvas_height;			// Canvas dimensions
 
@@ -69,7 +48,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	public Creature getCreature_Other() {
 		return _creatureOther;
 	}
-	
+
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.v(TAG, "surfaceChanged");
@@ -122,11 +101,11 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	public void render(Canvas canvas) {
 
 		float dx, dy;
-		
+
 		// background
 		_paint.setColor(Color.WHITE);
 		canvas.drawRect(0, 0, canvas_width, canvas_height, _paint);
-		
+
 		// draw ground
 		Bitmap ground = BitmapFactory.decodeResource(getResources(), R.drawable.ground);
 		canvas.drawBitmap(ground, 0, canvas_height/2+10, _paint);
@@ -140,7 +119,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.translate(dx, dy);									// translate position
 		_creatureUser.render(canvas, _paint);						// position is top-left of image
 		canvas.restore();
-		
+
 		// right creature
 		canvas.save();
 		dx = (canvas_width - _creatureOther.getWidth() - 20);
@@ -148,8 +127,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.translate(dx, dy);									// translate position
 		_creatureOther.render(canvas, _paint);						// position is top-left of image
 		canvas.restore();
-		
-		
+
+
 		// draw names
 		_paint.setTextSize(25);
 		_paint.setColor(Color.BLACK);
@@ -189,35 +168,67 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	public void update() {
 
 
-		if (COMMAND != null && System.currentTimeMillis() > COMMAND_time) {
+		if (COMMAND != null && System.currentTimeMillis() > COMMAND.time) {
 
-			switch (COMMAND_index) {
-			case 0:
-				// Shows attack message & animation
-				showMessage(_creatureUser.getName() + " uses " + COMMAND.getName() + ".");
-				_creatureUser.performAnimation(COMMAND.getAnimationType());
+			if (COMMAND.getAttacker() == Action.ATTACKER_PLAYR) {
+				// PLAYER ATTACKS!
+				switch (COMMAND.step) {
+				case 0:
+					// Shows attack message & animation
+					showMessage(_creatureUser.getName() + " uses " + COMMAND.getName() + ".");
+					_creatureUser.performAnimation(COMMAND.getAnimationType());
+
+					COMMAND.time = System.currentTimeMillis() + 1000;
+					COMMAND.step++;
+					break;
+				case 1:
+					// Say it is super effective or w/e
+					showMessage("It might have been super effective!");
+					_creatureOther.performAnimation(Animation.HURT);
+					COMMAND.time = System.currentTimeMillis() + 1000;
+					COMMAND.step++;
+					break;
+				case 2:
+					// Lower enemy hp
+					_creatureOther.Hurt(10);
+					COMMAND.step++;
+					break;
+				case 3:
+					// Reset all
+					COMMAND = null;
+					performAttack_Other("");
+					break;
+				}
+			} else {
+				// OPPONENT ATTACKS!
+				switch (COMMAND.step) {
+				case 0:
+					// Shows attack message & animation
+					showMessage(_creatureOther.getName() + " uses " + COMMAND.getName() + ".");
+					_creatureOther.performAnimation(COMMAND.getAnimationType());
+
+					COMMAND.time = System.currentTimeMillis() + 1000;
+					COMMAND.step++;
+					break;
+				case 1:
+					// Say it is super effective or w/e
+					showMessage("It might have been super effective!");
+					_creatureUser.performAnimation(Animation.HURT);
+					COMMAND.time = System.currentTimeMillis() + 1000;
+					COMMAND.step++;
+					break;
+				case 2:
+					// Lower enemy hp
+					_creatureUser.Hurt(10);
+					COMMAND.step++;
+					break;
+				case 3:
+					// Reset all
+					COMMAND = null;
+					showButtons();
+					break;
+				}
 				
-				COMMAND_time = System.currentTimeMillis() + 1000;
-				COMMAND_index++;
-				break;
-			case 1:
-				// Say it is super effective or w/e
-				showMessage("It might have been super effective!");
-				_creatureOther.performAnimation(Animation.HURT);
-				COMMAND_time = System.currentTimeMillis() + 1000;
-				COMMAND_index++;
-				break;
-			case 2:
-				// Lower enemy hp
-				_creatureOther.Hurt(10);
-				COMMAND_index++;
-				break;
-			case 3:
-				// Reset all
-				COMMAND = null;
-				COMMAND_time = 0;
-				showButtons();
-				break;
 			}
 		}
 
@@ -227,14 +238,23 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	/**
 	 * Local player uses an attack. Called by BattleActivity
 	 */
-	public void performUserAttack(String attackName) {
-		
-		COMMAND_time = 0;
-		COMMAND_index = 0;
-		COMMAND = ResourceManager.getAttack(getResources(), attackName);
+	public void performAttack_Player(String attackName) {
+
+		COMMAND = ResourceManager.getAttack(getResources(), attackName, Action.ATTACKER_PLAYR);
 
 	}
-	
+
+	/**
+	 * Other player uses an attack. 
+	 */
+	public void performAttack_Other(String attackName) {
+		//TODO: Maybe not have it random? I dunno.
+
+		// Get random attack
+		int index = (int) Math.floor(Math.random() * _creatureOther.getAttackList().size());
+		COMMAND = ResourceManager.getAttack(getResources(), _creatureOther.getAttackList().get(index), Action.ATTACKER_OTHER);
+	}
+
 	/**
 	 * Uses DrawingPanelListener interface to send information to the bottom panel.
 	 * @param listen

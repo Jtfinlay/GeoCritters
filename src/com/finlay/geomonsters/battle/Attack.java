@@ -19,10 +19,11 @@ public class Attack extends Action {
 	
 	private static final String TAG = "Attack";
 	
-	public Attack(String name, String type, int animation) {
+	public Attack(String name, String type, int animation, int attacker) {
 		_name = name;
 		_type = type;
 		_animation = animation;
+		_attacker = attacker;
 	}
 	
 

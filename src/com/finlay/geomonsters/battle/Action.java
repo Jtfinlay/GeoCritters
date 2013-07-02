@@ -4,11 +4,16 @@ import android.content.res.Resources;
 
 public class Action {
 
+	public static final int ATTACKER_PLAYR = 0;
+	public static final int ATTACKER_OTHER = 1;
+	
 	protected String 	_name;
 	protected String 	_type;
 	protected int 		_animation;
+	protected int		_attacker;
 	
-	protected void init(Resources res) {}
+	public double	time = 0;	// when to execute next step
+	public int		step = 0;	// next step to execute
 	
 	public String getName() {
 		return _name;
@@ -18,5 +23,8 @@ public class Action {
 	}
 	public int getAnimationType() {
 		return _animation;
+	}
+	public int getAttacker() {
+		return _attacker;
 	}
 }

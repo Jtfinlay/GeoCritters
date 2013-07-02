@@ -70,7 +70,7 @@ public class ResourceManager {
 
 	}
 
-	public static Attack getAttack(Resources res, String attack_name) {
+	public static Attack getAttack(Resources res, String attack_name, int attacker) {
 		
 		Attack result = null;
 		
@@ -98,7 +98,7 @@ public class ResourceManager {
 					String type 	= attack.getAttribute(KEY_TYPE);
 					int animation 	= Integer.parseInt(attack.getAttribute(KEY_ANIME));
 
-					result = new Attack(attack_name, type, animation);
+					result = new Attack(attack_name, type, animation, attacker);
 					break;
 				}
 			}

@@ -183,7 +183,7 @@ public class BattleActivity extends Activity {
 				finish();
 			} else {
 				// must be an attack
-				drawingPanel.performUserAttack(thisButton.getText().toString());
+				drawingPanel.performAttack_Player(thisButton.getText().toString());
 			}
 		}
 
