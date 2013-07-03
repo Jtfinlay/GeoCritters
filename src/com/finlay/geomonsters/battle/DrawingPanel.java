@@ -29,6 +29,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int GAME_STATE_SETUP			= 0;
 	private static final int GAME_STATE_PLAYERATTACK	= 1;
 	private static final int GAME_STATE_ENEMYATTACK		= 2;
+	private static final int GAME_STATE_PLAYERDEATH		= 3;
+	private static final int GAME_STATE_ENEMYDEATH		= 4;
 
 	private int 	GAME_STATE 	= GAME_STATE_SETUP;		// Current state of game
 	private Attack 	ATTACK;								// Info about any Actions 
@@ -242,8 +244,11 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 					break;
 
 				case 4:
-					// TODO: Check for deadness
-					GAME_STEP++;
+					if (_creatureOther.getHP() <= 0) {
+						setGameState(GAME_STATE_ENEMYDEATH);
+					} else {
+						GAME_STEP++;
+					}
 					break;
 
 				case 5:
@@ -260,7 +265,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 				// Cycle through the steps:
 				switch (GAME_STEP) {
-				
+
 
 				case 0:
 					// Attack Message & Animation
@@ -314,17 +319,55 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 				}
 				break;
-				
-				default: break;
+
+			case GAME_STATE_PLAYERDEATH:
+
+				switch(GAME_STEP) {
+
+				}
+				break;
+
+			case GAME_STATE_ENEMYDEATH:
+				Log.v(TAG, "EnemyDeath. State: " + GAME_STEP);
+				switch(GAME_STEP) {
+				case 0:
+					showMessage("Wowzer! You actually managed to kill the Squirtle. That's incredible!");
+
+					TIMER = System.currentTimeMillis() + 5000;
+					GAME_STEP++;
+					break;
+
+				case 1:
+					showMessage("I mean, it took me like a whole 10 seconds to write it's AI!");
+
+					TIMER = System.currentTimeMillis() + 5000;
+					GAME_STEP++;
+					break;
+
+				case 2:
+					showMessage("Well, I guess I'll resurrect Squirtle's dead corpse for you. G'Luck!");
+
+					TIMER = System.currentTimeMillis() + 5000;
+					GAME_STEP++;
+					break;
+
+				case 3:
+					performAttack_Other();
+					break;
+
+				}
+				break;
+
+			default: break;
 
 			}
 		}
 	}
 
 	public void setGameState(int state) {
-		GAME_STATE = state;
 		GAME_STEP = 0;
-		
+		GAME_STATE = state;
+
 		if (GAME_STATE == GAME_STATE_INPUT)
 			showButtons();
 	}
