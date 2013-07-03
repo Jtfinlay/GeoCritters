@@ -25,7 +25,15 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	private DrawingPanelListener customListener;
 
-	private Action	COMMAND;							// For managing action cycle
+	private static final int GAME_STATE_INPUT			= -1;
+	private static final int GAME_STATE_SETUP			= 0;
+	private static final int GAME_STATE_PLAYERATTACK	= 1;
+	private static final int GAME_STATE_ENEMYATTACK		= 2;
+
+	private int 	GAME_STATE 	= GAME_STATE_SETUP;		// Current state of game
+	private Attack 	ATTACK;								// Info about any Actions 
+	private int 	GAME_STEP 	= 0;					// Current step in state
+	private long 	TIMER	= 0;						// Time for current step
 
 	private int canvas_width, canvas_height;			// Canvas dimensions
 
@@ -167,72 +175,158 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	 */
 	public void update() {
 
+		// only do something if the prior event is finished
+		if (System.currentTimeMillis() > TIMER) {
 
-		if (COMMAND != null && System.currentTimeMillis() > COMMAND.time) {
+			switch (GAME_STATE) {
+			case GAME_STATE_SETUP:
 
-			if (COMMAND.getAttacker() == Action.ATTACKER_PLAYR) {
-				// PLAYER ATTACKS!
-				switch (COMMAND.step) {
-				case 0:
-					// Shows attack message & animation
-					showMessage(_creatureUser.getName() + " uses " + COMMAND.getName() + ".");
-					_creatureUser.performAnimation(COMMAND.getAnimationType());
+				//TODO: Big opening thingy where we summon our creature and w/e
 
-					COMMAND.time = System.currentTimeMillis() + 1000;
-					COMMAND.step++;
-					break;
-				case 1:
-					// Say it is super effective or w/e
-					showMessage("It might have been super effective!");
-					_creatureOther.performAnimation(Animation.HURT);
-					COMMAND.time = System.currentTimeMillis() + 1000;
-					COMMAND.step++;
-					break;
-				case 2:
-					// Lower enemy hp
-					_creatureOther.Hurt(10);
-					COMMAND.step++;
-					break;
-				case 3:
-					// Reset all
-					COMMAND = null;
-					performAttack_Other("");
-					break;
-				}
-			} else {
-				// OPPONENT ATTACKS!
-				switch (COMMAND.step) {
-				case 0:
-					// Shows attack message & animation
-					showMessage(_creatureOther.getName() + " uses " + COMMAND.getName() + ".");
-					_creatureOther.performAnimation(COMMAND.getAnimationType());
-
-					COMMAND.time = System.currentTimeMillis() + 1000;
-					COMMAND.step++;
-					break;
-				case 1:
-					// Say it is super effective or w/e
-					showMessage("It might have been super effective!");
-					_creatureUser.performAnimation(Animation.HURT);
-					COMMAND.time = System.currentTimeMillis() + 1000;
-					COMMAND.step++;
-					break;
-				case 2:
-					// Lower enemy hp
-					_creatureUser.Hurt(10);
-					COMMAND.step++;
-					break;
-				case 3:
-					// Reset all
-					COMMAND = null;
+				// Fastest creature gets first attack
+				if (_creatureOther.getSpeed() > _creatureUser.getSpeed()) {
+					// enemy attacks
+					performAttack_Other();
+				} else {
+					// user gets attack - wait for input
+					setGameState(GAME_STATE_INPUT);
 					showButtons();
-					break;
 				}
+
+				break;
+
+
+			case GAME_STATE_PLAYERATTACK:
+
+				// Cycle through the steps:
+				switch (GAME_STEP) {
+
+				case 0:
+					// Attack Message & Animation
+					ATTACK.init(getResources(), _creatureUser, _creatureOther);
+
+					showMessage(_creatureUser.getName() + " uses " + ATTACK.getName() + ".");
+					_creatureUser.performAnimation(ATTACK.getAnimationType());
+
+					TIMER = System.currentTimeMillis() + 1500;
+					GAME_STEP++;
+					break;
+
+				case 1:		
+					// Effectiveness Message
+					String effectiveMsg = ATTACK.getEffectiveMessage();
+
+					if (!effectiveMsg.equals("")) {
+						showMessage(effectiveMsg);
+						TIMER = System.currentTimeMillis() + 1500;
+					}
+					GAME_STEP++;
+					break;
+
+				case 2:
+					// Perform HIT animation
+					if (ATTACK.getDamageDealt() > 0 ) {
+						_creatureOther.performAnimation(Animation.HURT);
+						TIMER = System.currentTimeMillis() + 500;
+					}
+					GAME_STEP++;
+					break;
+
+				case 3:
+					// Lower HP
+					if (ATTACK.getDamageDealt() > 0 ) {
+						_creatureOther.Hurt(ATTACK.getDamageDealt());
+						TIMER = System.currentTimeMillis() + 500;
+					}
+					GAME_STEP++;
+					break;
+
+				case 4:
+					// TODO: Check for deadness
+					GAME_STEP++;
+					break;
+
+				case 5:
+					// Enemy gets to attack user now
+					performAttack_Other();
+					break;
+
+				}
+				break;
+
+
+
+			case GAME_STATE_ENEMYATTACK:
+
+				// Cycle through the steps:
+				switch (GAME_STEP) {
 				
+
+				case 0:
+					// Attack Message & Animation
+					ATTACK.init(getResources(), _creatureOther, _creatureUser);
+
+					showMessage(_creatureOther.getName() + " uses " + ATTACK.getName() + ".");
+					_creatureOther.performAnimation(ATTACK.getAnimationType());
+
+					TIMER = System.currentTimeMillis() + 1500;
+					GAME_STEP++;
+					break;
+
+				case 1:		
+					// Effectiveness Message
+					String effectiveMsg = ATTACK.getEffectiveMessage();
+
+					if (!effectiveMsg.equals("")) {
+						showMessage(effectiveMsg);
+						TIMER = System.currentTimeMillis() + 1500;
+					}
+					GAME_STEP++;
+					break;
+
+				case 2:
+					// Perform HIT animation
+					if (ATTACK.getDamageDealt() > 0 ) {
+						_creatureUser.performAnimation(Animation.HURT);
+						TIMER = System.currentTimeMillis() + 500;
+					}
+					GAME_STEP++;
+					break;
+
+				case 3:
+					// Lower HP
+					if (ATTACK.getDamageDealt() > 0 ) {
+						_creatureUser.Hurt(ATTACK.getDamageDealt());
+						TIMER = System.currentTimeMillis() + 500;
+					}
+					GAME_STEP++;
+					break;
+
+				case 4:
+					// TODO: Check for deadness
+					GAME_STEP++;
+					break;
+
+				case 5:
+					// Wait for input so player can attack
+					setGameState(GAME_STATE_INPUT);
+					break;
+
+				}
+				break;
+				
+				default: break;
+
 			}
 		}
+	}
 
-
+	public void setGameState(int state) {
+		GAME_STATE = state;
+		GAME_STEP = 0;
+		
+		if (GAME_STATE == GAME_STATE_INPUT)
+			showButtons();
 	}
 
 	/**
@@ -240,19 +334,22 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	 */
 	public void performAttack_Player(String attackName) {
 
-		COMMAND = ResourceManager.getAttack(getResources(), attackName, Action.ATTACKER_PLAYR);
+		ATTACK = ResourceManager.getAttack(getResources(), attackName);
+		setGameState(GAME_STATE_PLAYERATTACK);
 
 	}
 
 	/**
 	 * Other player uses an attack. 
 	 */
-	public void performAttack_Other(String attackName) {
+	public void performAttack_Other() {
 		//TODO: Maybe not have it random? I dunno.
 
 		// Get random attack
 		int index = (int) Math.floor(Math.random() * _creatureOther.getAttackList().size());
-		COMMAND = ResourceManager.getAttack(getResources(), _creatureOther.getAttackList().get(index), Action.ATTACKER_OTHER);
+		ATTACK = ResourceManager.getAttack(getResources(), _creatureOther.getAttackList().get(index));
+		setGameState(GAME_STATE_ENEMYATTACK);
+
 	}
 
 	/**

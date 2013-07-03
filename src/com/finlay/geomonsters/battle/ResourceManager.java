@@ -29,6 +29,8 @@ public class ResourceManager {
 		final String KEY_NAME = "name";
 		final String KEY_ATTACK = "attack";
 		final String KEY_IMAGE = "image";
+		final String KEY_TYPE = "type";
+		final String KEY_SPEED = "speed";
 
 		XMLParser parser = new XMLParser();
 		InputStream resStream = res.openRawResource(R.raw.creatures);
@@ -51,11 +53,17 @@ public class ResourceManager {
 					attacks.add(parser.getElementValue(childs.item(c)));
 
 				// image source
-				String imageName = parser.getElementValue(creature.getElementsByTagName(KEY_IMAGE).item(0));
+				String imageName = creature.getAttribute(KEY_IMAGE);
 				int resID = res.getIdentifier(imageName, "drawable", "com.finlay.geomonsters");
 				Bitmap image = BitmapFactory.decodeResource(res, resID);
+				
+				// type
+				String type = creature.getAttribute(KEY_TYPE);
+				
+				// speed
+				int speed = Integer.parseInt(creature.getAttribute(KEY_SPEED));
 
-				result = new Creature(name, image, attacks);
+				result = new Creature(name, image, type, speed, attacks);
 				break;
 			}
 		}
@@ -70,7 +78,7 @@ public class ResourceManager {
 
 	}
 
-	public static Attack getAttack(Resources res, String attack_name, int attacker) {
+	public static Attack getAttack(Resources res, String attack_name) {
 		
 		Attack result = null;
 		
@@ -98,7 +106,7 @@ public class ResourceManager {
 					String type 	= attack.getAttribute(KEY_TYPE);
 					int animation 	= Integer.parseInt(attack.getAttribute(KEY_ANIME));
 
-					result = new Attack(attack_name, type, animation, attacker);
+					result = new Attack(attack_name, type, animation);
 					break;
 				}
 			}
@@ -186,4 +194,37 @@ public class ResourceManager {
 		return result;
 	}
 
+	public static int getTypeRating(Resources res, String aggroName, String defendName) {
+
+		int result = 0;
+
+		final String KEY 		= "element";
+		final String KEY_NAME 	= "name";
+
+		XMLParser parser = new XMLParser();
+		InputStream resStream = res.openRawResource(R.raw.type);
+		Document doc = parser.getDomElement(resStream);
+
+		NodeList types = doc.getElementsByTagName(KEY);
+
+		// cycle through attacks
+		for (int i=0; i < types.getLength(); i++) {
+
+			Element type = (Element) types.item(i);
+
+			// is this the attack?
+			if (type.getAttribute(KEY_NAME).equals(aggroName)) {
+
+				result = Integer.parseInt(type.getAttribute(defendName));
+				break;
+			}
+		}
+		try {
+			resStream.close();
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		}
+
+		return result;
+	}
 }

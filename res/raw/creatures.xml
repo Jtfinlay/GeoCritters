@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <creature name="Kangoo">
-        <type>ground</type>
+    <creature name="Kangoo"
+        type="normal"
+        image="kangaroo"
+        speed="15">
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
-        <attack>Creme Brulee</attack>
+    	<attack>Creme Brulee</attack>
         
-        <image>kangaroo</image>
     </creature>
     
-    <creature name="Squirtle">
-        <type>water</type>
+    <creature name="Squirtle"
+        type="water"
+        image="squirtle"
+        speed="18">
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
         <attack>Creme Brulee</attack>
-        
-        <image>squirtle</image>
+      
     </creature>
 </resources>

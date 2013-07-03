@@ -5,57 +5,57 @@
 
     <element
         name="normal"
-        fire="3"
-        grass="3"
+        fire="2"
+        grass="2"
         ground="1"
-        lightening="3"
-        normal="3"
-        water="3"
+        lightening="2"
+        normal="2"
+        water="2"
         color="#ffffff" />
     <element
         name="water"
-        fire="5"
+        fire="3"
         grass="1"
-        ground="4"
+        ground="2"
         lightning="2"
-        normal="3"
-        water="2"
+        normal="2"
+        water="1"
         color="#c0f1ff" />
     <element
         name="fire"
-        fire="2"
-        grass="5"
-        ground="3"
-        lightning="3"
-        normal="3"
+        fire="1"
+        grass="3"
+        ground="2"
+        lightning="2"
+        normal="2"
         water="1"
         color="#f0c9c9" />
     <element
         name="ground"
-        fire="3"
+        fire="2"
         grass="1"
-        ground="4"
-        lightning="5"
-        normal="4"
+        ground="2"
+        lightning="3"
+        normal="2"
         water="2"
         color="#e3dcd2" />
     <element
         name="lightning"
-        fire="3"
+        fire="2"
         grass="2"
         ground="0"
-        lightning="2"
+        lightning="1"
         normal="3"
-        water="5"
+        water="3"
         color="#f5f9b8" />
     <element
         name="grass"
         fire="1"
-        grass="2"
-        ground="5"
-        lightning="3"
-        normal="3"
-        water="4"
+        grass="1"
+        ground="3"
+        lightning="2"
+        normal="2"
+        water="3"
         color="#b8f9c4" />
 
 </resources>

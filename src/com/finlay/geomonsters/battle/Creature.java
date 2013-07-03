@@ -28,17 +28,23 @@ import com.finlay.geomonsters.XMLParser;
 public class Creature {
 
 	private static final String TAG = "Creature";
-	private String _name;
-	private Bitmap _image;
-	private ArrayList<String> _attacks;
-	private Animation _animation;
+	private String 	_name;
+	private String 	_type;
+	private Bitmap 	_image;
+	private int 	_speed;
+	
+	private ArrayList<String> 	_attacks;
+	private Animation 			_animation;
+	
 	private float Max_HP = 100f;
 	private float HP = Max_HP;
 	
-	public Creature(String name, Bitmap image, ArrayList<String> attacks) {
+	public Creature(String name, Bitmap image, String type, int speed,  ArrayList<String> attacks) {
 		_name = name;
 		_image = image;
 		_attacks = attacks;
+		_speed = speed;
+		_type = type;
 		_animation = new Animation(_image);
 	}
 	public ArrayList<String> getAttackList() {
@@ -51,11 +57,17 @@ public class Creature {
 	public String getName() {
 		return _name;
 	}
+	public int getSpeed() {
+		return _speed;
+	}
 	public int getMaxHP() {
 		return (int) Max_HP;
 	}
 	public int getHP() {
 		return (int) HP;
+	}
+	public String getType() {
+		return _type;
 	}
 	public float getHealthPercent() {
 		return HP / Max_HP;
