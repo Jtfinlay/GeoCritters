@@ -33,9 +33,9 @@ public class Creature {
 	private String 	_type;
 	private Bitmap 	_image;
 	
-	private int 	_speed; 						// Time between attacks
-	private long	_nextAttackCounter = _speed;	// Time until next attack
-	private long	_lastTimeUpdate = 0;
+	private double 	_speed; 						// Time between attacks
+	private double	_nextAttackCounter = _speed;	// Time until next attack
+	private double	_lastTimeUpdate = 0;
 	
 	private ArrayList<String> 	_attacks;
 	private Animation 			_animation;
@@ -66,10 +66,10 @@ public class Creature {
 		return _name;
 	}
 	
-	public long getAttackSpeed() {
+	public double getAttackSpeed() {
 		return _speed;
 	}
-	public long getNextAttackCounter() {
+	public double getNextAttackCounter() {
 		return _nextAttackCounter;
 	}
 	public void resetNextAttackCounter() {
@@ -82,7 +82,7 @@ public class Creature {
 		_nextAttackCounter -= (System.currentTimeMillis() - _lastTimeUpdate);
 		_lastTimeUpdate = System.currentTimeMillis();
 	}
-	public float getNextAttackPercent() {
+	public double getNextAttackPercent() {
 		return Math.max((_speed - _nextAttackCounter) / _speed, 0);
 	}
 	

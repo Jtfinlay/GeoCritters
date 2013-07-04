@@ -102,7 +102,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		
+
 		if (GAME_STEP_ONTOUCH) {
 			GAME_STEP_ONTOUCH = false;
 			nextGameStep();
@@ -137,7 +137,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.translate(dx, dy);									// translate position
 		_creatureUser.render(canvas, _paint);						// position is top-left of image
 		canvas.restore();
-		
+
 		// left creature info bar
 		canvas.save();
 		canvas.translate(.04f*canvas_width, .05f*canvas_height);
@@ -151,7 +151,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.translate(dx, dy);									// translate position
 		_creatureOther.render(canvas, _paint);						// position is top-left of image
 		canvas.restore();
-		
+
 		// right creature info bar
 		canvas.save();
 		//TODO: x-coord should be set from InfoBar.getWidth();
@@ -174,19 +174,64 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 			TIMER = -1;
 			nextGameStep();
 		}
-		
+
 		// If idle, send updates to creatures
 		if (GAME_STATE == GAME_STATE_IDLE)  {
-			_creatureUser.idleUpdate();
-			_creatureOther.idleUpdate();
-		}
 
+			if (_creatureUser.getNextAttackPercent() >= 1) {
+				// player attack -- get input
+				setGameState(GAME_STATE_INPUT);
+			} else if (_creatureOther.getNextAttackPercent() >= 1) {
+				// enemy attack 
+				performAttack_Other();
+			} else {
+				// no attack ready yet
+				_creatureUser.idleUpdate();
+				_creatureOther.idleUpdate();
+			}
+		}
+		
 	}
 
 	public void nextGameStep() {
-		
+
 		Log.v(TAG, "nextGameStep. STATE: " + GAME_STATE + ", STEP: " + GAME_STEP);
 
+		switch (GAME_STATE) {
+		
+		case GAME_STATE_SETUP:
+			switch (GAME_STEP) {
+			case 0:
+				showMessage("You have encountered an enemy " + _creatureOther.getName().toUpperCase());
+				nextStepOnTouch();
+				break;
+			case 1:
+				_creatureUser.ResumeAttackCounter();
+				_creatureOther.ResumeAttackCounter();
+				setGameState(GAME_STATE_IDLE);
+				break;
+			}
+			
+			break;
+			
+		case GAME_STATE_IDLE:
+			showMessage("");
+			break;
+			
+		case GAME_STATE_INPUT:
+			
+			
+			break;
+			
+		case GAME_STATE_PLAYERATTACK:
+			_creatureUser.resetNextAttackCounter();
+			break;
+			
+		case GAME_STATE_ENEMYATTACK:
+			_creatureOther.resetNextAttackCounter();
+			break;
+			
+		}
 
 	}
 
@@ -225,12 +270,12 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	 */
 	public void performAttack_Other() {
 		//TODO: Maybe not have it random? I dunno.
-		
+
 		// Get random attack
 		int index = (int) Math.floor(Math.random() * _creatureOther.getAttackList().size());
 		ATTACK = ResourceManager.getAttack(getResources(), _creatureOther.getAttackList().get(index));
 		setGameState(GAME_STATE_ENEMYATTACK);
-		
+
 	}
 
 	/**

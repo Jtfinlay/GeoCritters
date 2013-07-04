@@ -4,7 +4,7 @@
     <creature name="Kangoo"
         type="normal"
         image="kangaroo"
-        speed="1000">
+        speed="2000">
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
@@ -15,7 +15,7 @@
     <creature name="Squirtle"
         type="water"
         image="squirtle"
-        speed="1200">
+        speed="2800">
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>

@@ -80,7 +80,7 @@ public class InfoBar {
 		p.setStrokeWidth(BARwidth);
 		
 		y += BARwidth + padding;
-		xm = xi + (xf-xi)*_creature.getNextAttackPercent();
+		xm = (float) (xi + (xf-xi)*_creature.getNextAttackPercent());
 		
 		p.setColor(Color.CYAN);
 		c.drawLine(xi, y, xm, y, p);
