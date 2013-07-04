@@ -174,6 +174,12 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 			TIMER = -1;
 			nextGameStep();
 		}
+		
+		// If idle, send updates to creatures
+		if (GAME_STATE == GAME_STATE_IDLE)  {
+			_creatureUser.idleUpdate();
+			_creatureOther.idleUpdate();
+		}
 
 	}
 

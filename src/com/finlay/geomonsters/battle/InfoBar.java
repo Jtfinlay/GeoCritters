@@ -5,8 +5,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
 public class InfoBar {
+	
+	private static final String TAG = "InfoBar";
 	
 	private Creature _creature;
 	private boolean alignLeft = true;
@@ -77,7 +80,7 @@ public class InfoBar {
 		p.setStrokeWidth(BARwidth);
 		
 		y += BARwidth + padding;
-		xm = (xf-xi)*.75f;
+		xm = xi + (xf-xi)*_creature.getNextAttackPercent();
 		
 		p.setColor(Color.CYAN);
 		c.drawLine(xi, y, xm, y, p);

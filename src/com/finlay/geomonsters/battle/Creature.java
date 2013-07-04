@@ -32,13 +32,17 @@ public class Creature {
 	private String 	_name;
 	private String 	_type;
 	private Bitmap 	_image;
-	private int 	_speed;
+	
+	private int 	_speed; 						// Time between attacks
+	private long	_nextAttackCounter = _speed;	// Time until next attack
+	private long	_lastTimeUpdate = 0;
 	
 	private ArrayList<String> 	_attacks;
 	private Animation 			_animation;
 	
-	private float Max_HP = 100f;
+	private float Max_HP = 100f;	// TODO: Should get from XML.
 	private float HP = Max_HP;
+
 	
 	public Creature(String name, Bitmap image, String type, int speed,  ArrayList<String> attacks) {
 		_name = name;
@@ -47,6 +51,8 @@ public class Creature {
 		_speed = speed;
 		_type = type;
 		_animation = new Animation(_image);
+		
+		resetNextAttackCounter();
 
 	}
 	public ArrayList<String> getAttackList() {
@@ -59,9 +65,27 @@ public class Creature {
 	public String getName() {
 		return _name;
 	}
-	public int getSpeed() {
+	
+	public long getAttackSpeed() {
 		return _speed;
 	}
+	public long getNextAttackCounter() {
+		return _nextAttackCounter;
+	}
+	public void resetNextAttackCounter() {
+		_nextAttackCounter = _speed;
+	}
+	public void ResumeAttackCounter() {
+		_lastTimeUpdate = System.currentTimeMillis();
+	}
+	public void idleUpdate() {
+		_nextAttackCounter -= (System.currentTimeMillis() - _lastTimeUpdate);
+		_lastTimeUpdate = System.currentTimeMillis();
+	}
+	public float getNextAttackPercent() {
+		return Math.max((_speed - _nextAttackCounter) / _speed, 0);
+	}
+	
 	public int getMaxHP() {
 		return (int) Max_HP;
 	}
