@@ -17,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class BattleActivity extends Activity {
@@ -25,6 +26,7 @@ public class BattleActivity extends Activity {
 
 	private Button btn1, btn2, btn3, btn4;
 	private DrawingPanel drawingPanel;
+	private RelativeLayout	bottomPanel;
 	private LinearLayout btnPanel;
 	private TextView msgPanel;
 
@@ -51,10 +53,12 @@ public class BattleActivity extends Activity {
 		btnPanel = (LinearLayout) findViewById(R.id.Buttons);
 		msgPanel = (TextView) findViewById(R.id.MessageView);
 		drawingPanel = (DrawingPanel) findViewById(R.id.BattleView);
+		bottomPanel = (RelativeLayout) findViewById(R.id.Bottom_Panel);
 		drawingPanel.setCustomListener(new MyDrawingPanelListener());
+		
 
 		// send any touch events on bottom menu to the drawingPanel when msgPanel is visible
-		msgPanel.setOnTouchListener(new OnTouchListener() {
+		bottomPanel.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				return drawingPanel.onTouchEvent(arg1);

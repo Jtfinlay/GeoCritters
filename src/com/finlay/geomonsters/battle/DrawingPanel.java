@@ -222,6 +222,48 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 			break;
 
 		case GAME_STATE_ATTACK:
+			
+			switch(GAME_STEP) {
+			case 0:
+				// State attack
+				showMessage(ATTACK.getAttacker().getName() + " uses " + ATTACK.getName());
+				nextStepIn(200);
+				break;
+			case 1:
+				// Attack animation
+				ATTACK.getAttacker().performAnimation(Animation.STRIKE);
+				nextStepOnTouch();	
+				break;
+			case 2:
+				// Super effective?
+				if (ATTACK.getEffectiveMessage().equals(""))
+					nextStep();
+				else {
+					showMessage(ATTACK.getEffectiveMessage());
+					nextStepIn(200);
+				}
+				break;
+			case 3:
+				// Hurt & Animation
+				if (ATTACK.getDamageDealt() == 0)
+					nextStep();
+				else {
+					ATTACK.getDefender().performAnimation(Animation.HURT);
+					ATTACK.getDefender().Hurt(ATTACK.getDamageDealt());
+					nextStepOnTouch();
+				}
+				break;
+			case 4:
+				// TODO: Check death
+				nextStep();
+				break;
+			case 5:
+				// Back to idle
+				ATTACK.getAttacker().resetNextAttackCounter();
+				setGameState(GAME_STATE_IDLE);
+				break;
+					
+			}
 
 			break;
 		}
@@ -247,6 +289,10 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 		if (GAME_STATE == GAME_STATE_INPUT)
 			showButtons();
+		else if (GAME_STATE == GAME_STATE_IDLE) {
+			_creatureUser.ResumeAttackCounter();
+			_creatureOther.ResumeAttackCounter();
+		}
 	}
 
 	/**

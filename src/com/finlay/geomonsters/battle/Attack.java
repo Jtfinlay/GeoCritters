@@ -54,9 +54,14 @@ public class Attack {
 		_damageDealt = damage;
 
 	}
-
+	public Creature getAttacker() {
+		return _attacker;
+	}
+	public Creature getDefender() {
+		return _defender;
+	}
 	public String getName() {
-		return _name;
+		return _name.toUpperCase();
 	}
 	public String getType() {
 		return _type;

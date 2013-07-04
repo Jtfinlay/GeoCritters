@@ -50,10 +50,10 @@ public class InfoBar {
 		p.setColor(Color.DKGRAY);
 		if (alignLeft) {
 			p.setTextAlign(Paint.Align.LEFT);
-			c.drawText(_creature.getName().toUpperCase(), padding, padding+nameSize, p);
+			c.drawText(_creature.getName(), padding, padding+nameSize, p);
 		} else {
 			p.setTextAlign(Paint.Align.RIGHT);
-			c.drawText(_creature.getName().toUpperCase(), outline.right - padding, padding+nameSize, p);
+			c.drawText(_creature.getName(), outline.right - padding, padding+nameSize, p);
 		}
 		
 		// Health bar

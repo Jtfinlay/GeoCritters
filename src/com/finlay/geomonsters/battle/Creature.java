@@ -63,7 +63,7 @@ public class Creature {
 		HP = (HP > 0 ? HP : 0);
 	}	
 	public String getName() {
-		return _name;
+		return _name.toUpperCase();
 	}
 	
 	public double getAttackSpeed() {
@@ -83,7 +83,10 @@ public class Creature {
 		_lastTimeUpdate = System.currentTimeMillis();
 	}
 	public double getNextAttackPercent() {
-		return Math.max((_speed - _nextAttackCounter) / _speed, 0);
+		double amt = (_speed - _nextAttackCounter) / _speed;
+		amt = (amt > 0) ? amt : 0;
+		amt = (amt < 1) ? amt : 1;
+		return amt;
 	}
 	
 	public int getMaxHP() {
