@@ -62,7 +62,7 @@
                 android:layout_weight="1" />
         </LinearLayout>
 
-        <TextView
+        <com.finlay.geomonsters.battle.TextWriter
             android:id="@+id/MessageView"
             style="@style/CodeFont"
             android:layout_width="wrap_content"

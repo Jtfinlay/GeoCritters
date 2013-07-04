@@ -28,7 +28,10 @@ public class BattleActivity extends Activity {
 	private DrawingPanel drawingPanel;
 	private RelativeLayout	bottomPanel;
 	private LinearLayout btnPanel;
-	private TextView msgPanel;
+	private TextWriter msgPanel;
+
+	private long clickLast = 0;
+	private long clickDelay = 150;
 
 	Callable<Integer> onBackPress;
 
@@ -51,26 +54,23 @@ public class BattleActivity extends Activity {
 		btn4 = (Button) findViewById(R.id.button4);
 
 		btnPanel = (LinearLayout) findViewById(R.id.Buttons);
-		msgPanel = (TextView) findViewById(R.id.MessageView);
+		msgPanel = (TextWriter) findViewById(R.id.MessageView);
 		drawingPanel = (DrawingPanel) findViewById(R.id.BattleView);
 		bottomPanel = (RelativeLayout) findViewById(R.id.Bottom_Panel);
+
+		msgPanel.setCharacterDelay(50);
 		drawingPanel.setCustomListener(new MyDrawingPanelListener());
 
 
-		// send any touch events on bottom menu to the drawingPanel when msgPanel is visible
-		bottomPanel.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View arg0, MotionEvent arg1) {
-				return drawingPanel.onTouchEvent(arg1);
-			}
-		});
+		drawingPanel.setOnTouchListener(new MyViewTouchListener());
+		bottomPanel.setOnTouchListener(new MyViewTouchListener());
 
 		BtnSetup_Default();
 
-		btn1.setOnClickListener(new MyClickListener());
-		btn2.setOnClickListener(new MyClickListener());
-		btn3.setOnClickListener(new MyClickListener());
-		btn4.setOnClickListener(new MyClickListener());
+		btn1.setOnClickListener(new MyButtonClickListener());
+		btn2.setOnClickListener(new MyButtonClickListener());
+		btn3.setOnClickListener(new MyButtonClickListener());
+		btn4.setOnClickListener(new MyButtonClickListener());
 
 	}
 
@@ -144,16 +144,16 @@ public class BattleActivity extends Activity {
 	public void onBackPressed() {
 
 		Log.v(TAG, "Back pressed");
+
 		try {
 			onBackPress.call();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
 		}
 
 	}
 
-	class MyClickListener implements OnClickListener {
+	class MyButtonClickListener implements OnClickListener {
 
 		@Override
 		public void onClick(View arg0) {
@@ -174,6 +174,24 @@ public class BattleActivity extends Activity {
 		}
 
 	}
+	class MyViewTouchListener implements OnTouchListener {
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			if (System.currentTimeMillis() - clickLast < clickDelay)
+				return false;
+			clickLast = System.currentTimeMillis();
+			
+			if (msgPanel.isTyping()) {
+				msgPanel.forceEnd();
+				return false;
+			}
+
+			return drawingPanel.sendTouchEvent(event);
+		}
+
+
+	}
 	class MyDrawingPanelListener implements DrawingPanelListener {
 		@Override
 		public void showButtonView() {
@@ -192,7 +210,8 @@ public class BattleActivity extends Activity {
 				public void run() {
 					msgPanel.setVisibility(View.VISIBLE);
 					btnPanel.setVisibility(View.INVISIBLE);
-					msgPanel.setText(s);
+					//msgPanel.setText(s);
+					msgPanel.animateText(s);
 				}
 			});
 		}

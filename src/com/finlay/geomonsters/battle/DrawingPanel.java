@@ -103,7 +103,12 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-
+		return false;
+	}
+	
+	public boolean sendTouchEvent(MotionEvent e) {
+		Log.v(TAG, "onTouch");
+		
 		if (GAME_STEP_ONTOUCH) {
 			GAME_STEP_ONTOUCH = false;
 			nextGameStep();
@@ -203,7 +208,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		case GAME_STATE_SETUP:
 			switch (GAME_STEP) {
 			case 0:
-				showMessage("You have encountered an enemy " + _creatureOther.getName().toUpperCase());
+				showMessage("You have encountered an enemy " + _creatureOther.getName());
 				nextStepOnTouch();
 				break;
 			case 1:
