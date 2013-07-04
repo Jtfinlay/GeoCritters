@@ -9,7 +9,8 @@ public class Animation {
 	
 	public static final int NONE = 0;
 	public static final int HURT = 1;
-	public static final int STRIKE = 2;
+	public static final int KILL = 2;
+	public static final int STRIKE = 3;
 	
 	private int _currentAnimation = NONE;
 	private double _startTime = 0;
@@ -32,6 +33,9 @@ public class Animation {
 			break;
 		case HURT:
 			renderFrame_Hurt(c, p);
+			break;
+		case KILL:
+			renderFrame_Kill(c, p);
 			break;
 		case STRIKE:
 			renderFrame_Strike(c, p);
@@ -75,6 +79,21 @@ public class Animation {
 		else
 			c.drawBitmap(_image, m, p);
 			
+	}
+	
+	private void renderFrame_Kill(Canvas c, Paint p) {
+		
+		double time = System.currentTimeMillis() - _startTime;
+		
+		Matrix m = new Matrix();
+		
+		float y = (float) ((time/400f)*c.getHeight());
+		y = (y > c.getHeight()) ? c.getHeight() : y; // don't move it too far..
+		
+		m.postTranslate(0f, y); // hide below screen
+		
+		c.drawBitmap(_image, m, p);
+		
 	}
 	
 	

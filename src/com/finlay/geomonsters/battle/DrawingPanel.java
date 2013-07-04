@@ -30,6 +30,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int GAME_STATE_IDLE			= 1;	// Between attacks
 	private static final int GAME_STATE_INPUT			= 2;	// Wait for Player input
 	private static final int GAME_STATE_ATTACK			= 3;	// Creature uses attack
+	private static final int GAME_STATE_PLAYERDEAD		= 4;	// Player is dead.
+	private static final int GAME_STATE_ENEMYDEAD		= 5;	// Other is dead.
 
 	private int 	GAME_STATE 			= GAME_STATE_SETUP;		// Current state of game
 	private Attack 	ATTACK;										// Info about any Actions 
@@ -249,13 +251,16 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 					nextStep();
 				else {
 					ATTACK.getDefender().performAnimation(Animation.HURT);
-					ATTACK.getDefender().Hurt(ATTACK.getDamageDealt());
-					nextStepOnTouch();
+					nextStepIn(200);
 				}
 				break;
 			case 4:
-				// TODO: Check death
-				nextStep();
+				if (ATTACK.getDamageDealt() == 0)
+					nextStep();
+				else {
+					ATTACK.getDefender().Hurt(ATTACK.getDamageDealt());
+					nextStepOnTouch();
+				}
 				break;
 			case 5:
 				// Back to idle
@@ -265,6 +270,16 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 					
 			}
 
+			break;
+			
+		case GAME_STATE_PLAYERDEAD:
+			showMessage("Aww shucks. You died. GTFO.");
+			_creatureUser.performAnimation(Animation.KILL);
+			break;
+			
+		case GAME_STATE_ENEMYDEAD:
+			showMessage("Yay! You killed him. Now, GTFO.");
+			_creatureOther.performAnimation(Animation.KILL);
 			break;
 		}
 
@@ -282,17 +297,39 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		GAME_STEP++;
 		GAME_STEP_ONTOUCH = true;
 	}
-	public void setGameState(int state) {
+	public void setGameState(int state) {		
 		GAME_STEP = 0;
-		GAME_STATE = state;
-		nextGameStep();
 
-		if (GAME_STATE == GAME_STATE_INPUT)
+		if (GAME_STATE == GAME_STATE_ATTACK) {
+			// check for death -- TODO: Make this less shitty
+			if (ATTACK.getDefender().getHP() == 0) {
+				if (ATTACK.getDefender().equals(_creatureUser)) 
+					GAME_STATE = GAME_STATE_PLAYERDEAD;
+				 else 
+					GAME_STATE = GAME_STATE_ENEMYDEAD;					
+				
+				nextGameStep();
+				return;
+			} else if (ATTACK.getAttacker().getHP() == 0){
+				if (ATTACK.getAttacker().equals(_creatureUser)) 
+					GAME_STATE = GAME_STATE_PLAYERDEAD;
+				 else 
+					GAME_STATE = GAME_STATE_ENEMYDEAD;					
+				
+				nextGameStep();
+				return;
+			}
+		}
+		
+		if (state == GAME_STATE_INPUT)
 			showButtons();
-		else if (GAME_STATE == GAME_STATE_IDLE) {
+		else if (state == GAME_STATE_IDLE) {
 			_creatureUser.ResumeAttackCounter();
 			_creatureOther.ResumeAttackCounter();
 		}
+		
+		GAME_STATE = state;
+		nextGameStep();
 	}
 
 	/**
