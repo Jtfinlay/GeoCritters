@@ -20,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 
 import com.finlay.geomonsters.R;
@@ -46,6 +47,7 @@ public class Creature {
 		_speed = speed;
 		_type = type;
 		_animation = new Animation(_image);
+
 	}
 	public ArrayList<String> getAttackList() {
 		return _attacks;
@@ -82,13 +84,12 @@ public class Creature {
 	public int getHeight() {
 		return _image.getHeight();
 	}
+	
+	
 	public void render(Canvas c, Paint p) {
 		_animation.renderFrame(c, p);
 	}
 	public void performAnimation(int animID) {
-		// 0 - Nothing
-		// 1 - Hurt
-		// 2 - Strike
 		_animation.start(animID);
 	}
 	

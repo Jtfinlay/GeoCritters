@@ -57,7 +57,6 @@ public class BattleActivity extends Activity {
 		msgPanel.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
-				Log.v(TAG, "Text touched.");
 				return drawingPanel.onTouchEvent(arg1);
 			}
 		});

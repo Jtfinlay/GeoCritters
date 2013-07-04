@@ -22,20 +22,21 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private GameThread _Thread;							// Game Thread
 	private Paint _paint;								// Paint object
 	private Creature _creatureUser, _creatureOther;		// Both creatures
+	private InfoBar _userInfo, _otherInfo;				// Info bars for creatures
 
 	private DrawingPanelListener customListener;
 
-	private static final int GAME_STATE_INPUT			= -1;
-	private static final int GAME_STATE_SETUP			= 0;
-	private static final int GAME_STATE_PLAYERATTACK	= 1;
-	private static final int GAME_STATE_ENEMYATTACK		= 2;
-	private static final int GAME_STATE_PLAYERDEATH		= 3;
-	private static final int GAME_STATE_ENEMYDEATH		= 4;
+	private static final int GAME_STATE_SETUP			= 0;	// Setup phase
+	private static final int GAME_STATE_IDLE			= 1;	// Between attacks
+	private static final int GAME_STATE_INPUT			= 2;	// Wait for Player input
+	private static final int GAME_STATE_PLAYERATTACK	= 3;	// Player uses attack
+	private static final int GAME_STATE_ENEMYATTACK		= 4;	// Enemy uses attack
 
-	private int 	GAME_STATE 	= GAME_STATE_SETUP;		// Current state of game
-	private Attack 	ATTACK;								// Info about any Actions 
-	private int 	GAME_STEP 	= 0;					// Current step in state
-	private long 	TIMER	= 0;						// Time for current step
+	private int 	GAME_STATE 			= GAME_STATE_SETUP;		// Current state of game
+	private Attack 	ATTACK;										// Info about any Actions 
+	private int 	GAME_STEP 			= 0;					// Current step in state
+	private long 	TIMER				= 0;					// Time for current step
+	private boolean	GAME_STEP_ONTOUCH 	= false;				// Wait for touch before next GAME_STEP
 
 	private int canvas_width, canvas_height;			// Canvas dimensions
 
@@ -45,6 +46,9 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		getHolder().addCallback(this);
 		_creatureUser = ResourceManager.newCreature(getResources(), "Kangoo");
 		_creatureOther = ResourceManager.newCreature(getResources(), "Squirtle");
+		_userInfo = new InfoBar(_creatureUser);
+		_otherInfo = new InfoBar(_creatureOther);
+		_otherInfo.alignRight();
 
 		_paint = new Paint();
 		_Thread = new GameThread(getHolder(), this);	
@@ -98,8 +102,11 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		float x = e.getX();
-		float y = e.getY();
+		
+		if (GAME_STEP_ONTOUCH) {
+			GAME_STEP_ONTOUCH = false;
+			nextGameStep();
+		}
 
 		return true;
 	}
@@ -113,6 +120,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		float dx, dy;
 
 		// background
+		_paint.setStyle(Paint.Style.FILL);
 		_paint.setColor(Color.WHITE);
 		canvas.drawRect(0, 0, canvas_width, canvas_height, _paint);
 
@@ -129,6 +137,12 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.translate(dx, dy);									// translate position
 		_creatureUser.render(canvas, _paint);						// position is top-left of image
 		canvas.restore();
+		
+		// left creature info bar
+		canvas.save();
+		canvas.translate(.04f*canvas_width, .05f*canvas_height);
+		_userInfo.render(canvas, _paint);
+		canvas.restore();
 
 		// right creature
 		canvas.save();
@@ -137,37 +151,15 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.translate(dx, dy);									// translate position
 		_creatureOther.render(canvas, _paint);						// position is top-left of image
 		canvas.restore();
+		
+		// right creature info bar
+		canvas.save();
+		//TODO: x-coord should be set from InfoBar.getWidth();
+		canvas.translate(.64f*canvas_width, .05f*canvas_height);
+		_otherInfo.render(canvas, _paint);
+		canvas.restore();
 
 
-		// draw names
-		_paint.setTextSize(25);
-		_paint.setColor(Color.BLACK);
-		canvas.drawText(_creatureUser.getName(), .05f*canvas_width, .14f*canvas_height, _paint);
-		canvas.drawText(_creatureOther.getName(), .58f*canvas_width, .14f*canvas_height, _paint);
-
-		// draw health bars
-		float xi, xf, y, xm;
-		_paint.setStrokeWidth(.01f*canvas_height);
-
-		xi = .05f*canvas_width;
-		xf = .33f*canvas_width;
-		y = .22f*canvas_height;
-		xm = xi + (xf - xi)*_creatureUser.getHealthPercent();
-
-		_paint.setColor(Color.GREEN);
-		canvas.drawLine(xi, y, xm, y, _paint);
-		_paint.setColor(Color.RED);
-		canvas.drawLine(xm, y, xf, y, _paint);
-
-		xi = .58f*canvas_width;
-		xf = .86f*canvas_width;
-		y = .22f*canvas_height;
-		xm = xi + (xf - xi)*_creatureOther.getHealthPercent();
-
-		_paint.setColor(Color.GREEN);
-		canvas.drawLine(xi, y, xm, y, _paint);
-		_paint.setColor(Color.RED);
-		canvas.drawLine(xm, y, xf, y, _paint);
 
 
 	}
@@ -177,196 +169,37 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	 */
 	public void update() {
 
-		// only do something if the prior event is finished
-		if (System.currentTimeMillis() > TIMER) {
-
-			switch (GAME_STATE) {
-			case GAME_STATE_SETUP:
-
-				//TODO: Big opening thingy where we summon our creature and w/e
-
-				// Fastest creature gets first attack
-				if (_creatureOther.getSpeed() > _creatureUser.getSpeed()) {
-					// enemy attacks
-					performAttack_Other();
-				} else {
-					// user gets attack - wait for input
-					setGameState(GAME_STATE_INPUT);
-					showButtons();
-				}
-
-				break;
-
-
-			case GAME_STATE_PLAYERATTACK:
-
-				// Cycle through the steps:
-				switch (GAME_STEP) {
-
-				case 0:
-					// Attack Message & Animation
-					ATTACK.init(getResources(), _creatureUser, _creatureOther);
-
-					showMessage(_creatureUser.getName() + " uses " + ATTACK.getName() + ".");
-					_creatureUser.performAnimation(ATTACK.getAnimationType());
-
-					TIMER = System.currentTimeMillis() + 1500;
-					GAME_STEP++;
-					break;
-
-				case 1:		
-					// Effectiveness Message
-					String effectiveMsg = ATTACK.getEffectiveMessage();
-
-					if (!effectiveMsg.equals("")) {
-						showMessage(effectiveMsg);
-						TIMER = System.currentTimeMillis() + 1500;
-					}
-					GAME_STEP++;
-					break;
-
-				case 2:
-					// Perform HIT animation
-					if (ATTACK.getDamageDealt() > 0 ) {
-						_creatureOther.performAnimation(Animation.HURT);
-						TIMER = System.currentTimeMillis() + 500;
-					}
-					GAME_STEP++;
-					break;
-
-				case 3:
-					// Lower HP
-					if (ATTACK.getDamageDealt() > 0 ) {
-						_creatureOther.Hurt(ATTACK.getDamageDealt());
-						TIMER = System.currentTimeMillis() + 500;
-					}
-					GAME_STEP++;
-					break;
-
-				case 4:
-					if (_creatureOther.getHP() <= 0) {
-						setGameState(GAME_STATE_ENEMYDEATH);
-					} else {
-						GAME_STEP++;
-					}
-					break;
-
-				case 5:
-					// Enemy gets to attack user now
-					performAttack_Other();
-					break;
-
-				}
-				break;
-
-
-
-			case GAME_STATE_ENEMYATTACK:
-
-				// Cycle through the steps:
-				switch (GAME_STEP) {
-
-
-				case 0:
-					// Attack Message & Animation
-					ATTACK.init(getResources(), _creatureOther, _creatureUser);
-
-					showMessage(_creatureOther.getName() + " uses " + ATTACK.getName() + ".");
-					_creatureOther.performAnimation(ATTACK.getAnimationType());
-
-					TIMER = System.currentTimeMillis() + 1500;
-					GAME_STEP++;
-					break;
-
-				case 1:		
-					// Effectiveness Message
-					String effectiveMsg = ATTACK.getEffectiveMessage();
-
-					if (!effectiveMsg.equals("")) {
-						showMessage(effectiveMsg);
-						TIMER = System.currentTimeMillis() + 1500;
-					}
-					GAME_STEP++;
-					break;
-
-				case 2:
-					// Perform HIT animation
-					if (ATTACK.getDamageDealt() > 0 ) {
-						_creatureUser.performAnimation(Animation.HURT);
-						TIMER = System.currentTimeMillis() + 500;
-					}
-					GAME_STEP++;
-					break;
-
-				case 3:
-					// Lower HP
-					if (ATTACK.getDamageDealt() > 0 ) {
-						_creatureUser.Hurt(ATTACK.getDamageDealt());
-						TIMER = System.currentTimeMillis() + 500;
-					}
-					GAME_STEP++;
-					break;
-
-				case 4:
-					// TODO: Check for deadness
-					GAME_STEP++;
-					break;
-
-				case 5:
-					// Wait for input so player can attack
-					setGameState(GAME_STATE_INPUT);
-					break;
-
-				}
-				break;
-
-			case GAME_STATE_PLAYERDEATH:
-
-				switch(GAME_STEP) {
-
-				}
-				break;
-
-			case GAME_STATE_ENEMYDEATH:
-				Log.v(TAG, "EnemyDeath. State: " + GAME_STEP);
-				switch(GAME_STEP) {
-				case 0:
-					showMessage("Wowzer! You actually managed to kill the Squirtle. That's incredible!");
-
-					TIMER = System.currentTimeMillis() + 5000;
-					GAME_STEP++;
-					break;
-
-				case 1:
-					showMessage("I mean, it took me like a whole 10 seconds to write it's AI!");
-
-					TIMER = System.currentTimeMillis() + 5000;
-					GAME_STEP++;
-					break;
-
-				case 2:
-					showMessage("Well, I guess I'll resurrect Squirtle's dead corpse for you. G'Luck!");
-
-					TIMER = System.currentTimeMillis() + 5000;
-					GAME_STEP++;
-					break;
-
-				case 3:
-					performAttack_Other();
-					break;
-
-				}
-				break;
-
-			default: break;
-
-			}
+		// Check Step timer
+		if (TIMER >= 0 && System.currentTimeMillis() > TIMER) {
+			TIMER = -1;
+			nextGameStep();
 		}
+
 	}
 
+	public void nextGameStep() {
+		
+		Log.v(TAG, "nextGameStep. STATE: " + GAME_STATE + ", STEP: " + GAME_STEP);
+
+
+	}
+
+	private void nextStep() {
+		GAME_STEP++;
+		TIMER = 0;
+	}
+	private void nextStepIn(long time) {
+		GAME_STEP++;
+		TIMER = System.currentTimeMillis() + time;
+	}
+	private void nextStepOnTouch() {
+		GAME_STEP++;
+		GAME_STEP_ONTOUCH = true;
+	}
 	public void setGameState(int state) {
 		GAME_STEP = 0;
 		GAME_STATE = state;
+		nextGameStep();
 
 		if (GAME_STATE == GAME_STATE_INPUT)
 			showButtons();
@@ -376,7 +209,6 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	 * Local player uses an attack. Called by BattleActivity
 	 */
 	public void performAttack_Player(String attackName) {
-
 		ATTACK = ResourceManager.getAttack(getResources(), attackName);
 		setGameState(GAME_STATE_PLAYERATTACK);
 
@@ -387,12 +219,12 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	 */
 	public void performAttack_Other() {
 		//TODO: Maybe not have it random? I dunno.
-
+		
 		// Get random attack
 		int index = (int) Math.floor(Math.random() * _creatureOther.getAttackList().size());
 		ATTACK = ResourceManager.getAttack(getResources(), _creatureOther.getAttackList().get(index));
 		setGameState(GAME_STATE_ENEMYATTACK);
-
+		
 	}
 
 	/**
