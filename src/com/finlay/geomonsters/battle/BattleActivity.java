@@ -55,7 +55,7 @@ public class BattleActivity extends Activity {
 		drawingPanel = (DrawingPanel) findViewById(R.id.BattleView);
 		bottomPanel = (RelativeLayout) findViewById(R.id.Bottom_Panel);
 		drawingPanel.setCustomListener(new MyDrawingPanelListener());
-		
+
 
 		// send any touch events on bottom menu to the drawingPanel when msgPanel is visible
 		bottomPanel.setOnTouchListener(new OnTouchListener() {
@@ -79,12 +79,12 @@ public class BattleActivity extends Activity {
 		btn2.setText("Inventory");
 		btn3.setText("GeoMonsters");
 		btn4.setText("Flee");
-		
+
 		btn1.setBackgroundColor(Color.WHITE);
 		btn2.setBackgroundColor(Color.WHITE);
 		btn3.setBackgroundColor(Color.WHITE);
 		btn4.setBackgroundColor(Color.WHITE);
-		
+
 		onBackPress = new Callable<Integer>() {
 			@Override
 			public Integer call() throws Exception {
@@ -98,53 +98,36 @@ public class BattleActivity extends Activity {
 
 		Creature user_creature = drawingPanel.getCreature_User();
 		ArrayList<String> attacks = user_creature.getAttackList();
-		
-		// TODO: Set button colours as well
-		
-		// Set button values to the attacks
 
-		switch(attacks.size()) {
-		case 0:
+		// Set button values to the attacks
+		btn1.setVisibility(View.INVISIBLE);
+		btn2.setVisibility(View.INVISIBLE);
+		btn3.setVisibility(View.INVISIBLE);
+		btn4.setVisibility(View.INVISIBLE);
+
+
+		if (attacks.size() == 0) 
 			Log.e(TAG, "No Attacks found for creature " + "Kangoo");
-			break;
-		case 1:
+
+		if (attacks.size() >= 1) {
 			btn1.setText(attacks.get(0));
-			btn2.setVisibility(View.INVISIBLE);
-			btn3.setVisibility(View.INVISIBLE);
-			btn4.setVisibility(View.INVISIBLE);
-			
+			btn1.setVisibility(View.VISIBLE);
 			btn1.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
-			break;
-		case 2:
-			btn1.setText(attacks.get(0));
+		}
+		if (attacks.size() >= 2) {
 			btn2.setText(attacks.get(1));
-			btn3.setVisibility(View.INVISIBLE);
-			btn4.setVisibility(View.INVISIBLE);
-			
-			btn1.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
-			btn2.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
-			break;
-		case 3:
-			btn1.setText(attacks.get(0));
-			btn2.setText(attacks.get(1));
-			btn3.setText(attacks.get(2));
-			btn4.setVisibility(View.INVISIBLE);
-		
-			btn1.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
+			btn2.setVisibility(View.VISIBLE);
 			btn2.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(1)));
-			btn3.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(2)));
-			break;
-		case 4:
-			btn1.setText(attacks.get(0));
-			btn2.setText(attacks.get(1));
+		}
+		if (attacks.size() >= 3) {
 			btn3.setText(attacks.get(2));
+			btn3.setVisibility(View.VISIBLE);
+			btn3.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(2)));
+		}
+		if (attacks.size() >= 4) {
 			btn4.setText(attacks.get(3));
-			
-			btn1.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(0)));
-			btn2.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(1)));
-			btn3.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(2)));
+			btn4.setVisibility(View.VISIBLE);
 			btn4.setBackgroundColor(ResourceManager.getColorOfAttack(getResources(), attacks.get(3)));
-			break;
 		}
 
 		onBackPress = new Callable<Integer>() {
