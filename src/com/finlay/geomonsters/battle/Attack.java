@@ -11,17 +11,25 @@ public class Attack {
 	private String 	_type;
 	private int 	_animation;
 	private int		_rating;
+	
+	private Creature _attacker;
+	private Creature _defender;
 
 	private boolean _criticalHit; //TODO: Not completely ignore this.
 	private int _damageDealt;
 
-	public Attack(String name, String type, int animation) {
+	public Attack(String name, String type, int animation, int rating, 
+					Creature attacker, Creature defender) {
+		_attacker = attacker;
+		_defender = defender;
 		_name = name;
 		_type = type;
 		_animation = animation;
+		_rating = rating;
+		
+		CalculateDamage();
 	}
-	public void init(Resources res, Creature attacker, Creature defender) {
-		_rating = ResourceManager.getTypeRating(res, _type, defender.getType());
+	public void CalculateDamage() {
 
 		// TODO: Calculate base damage
 		int damage = 10;

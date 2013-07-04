@@ -78,7 +78,10 @@ public class ResourceManager {
 
 	}
 
-	public static Attack getAttack(Resources res, String attack_name) {
+	public static Attack getAttack(Resources res, 
+									String attack_name,
+									Creature attacker,
+									Creature defender) {
 		
 		Attack result = null;
 		
@@ -105,8 +108,8 @@ public class ResourceManager {
 					// get attributes
 					String type 	= attack.getAttribute(KEY_TYPE);
 					int animation 	= Integer.parseInt(attack.getAttribute(KEY_ANIME));
-
-					result = new Attack(attack_name, type, animation);
+					int rating = ResourceManager.getTypeRating(res, type, defender.getType());
+					result = new Attack(attack_name, type, animation, rating, attacker, defender);
 					break;
 				}
 			}

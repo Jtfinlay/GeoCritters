@@ -29,8 +29,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int GAME_STATE_SETUP			= 0;	// Setup phase
 	private static final int GAME_STATE_IDLE			= 1;	// Between attacks
 	private static final int GAME_STATE_INPUT			= 2;	// Wait for Player input
-	private static final int GAME_STATE_PLAYERATTACK	= 3;	// Player uses attack
-	private static final int GAME_STATE_ENEMYATTACK		= 4;	// Enemy uses attack
+	private static final int GAME_STATE_ATTACK			= 3;	// Creature uses attack
 
 	private int 	GAME_STATE 			= GAME_STATE_SETUP;		// Current state of game
 	private Attack 	ATTACK;										// Info about any Actions 
@@ -190,7 +189,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 				_creatureOther.idleUpdate();
 			}
 		}
-		
+
 	}
 
 	public void nextGameStep() {
@@ -198,7 +197,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		Log.v(TAG, "nextGameStep. STATE: " + GAME_STATE + ", STEP: " + GAME_STEP);
 
 		switch (GAME_STATE) {
-		
+
 		case GAME_STATE_SETUP:
 			switch (GAME_STEP) {
 			case 0:
@@ -211,26 +210,20 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 				setGameState(GAME_STATE_IDLE);
 				break;
 			}
-			
+
 			break;
-			
+
 		case GAME_STATE_IDLE:
 			showMessage("");
 			break;
-			
+
 		case GAME_STATE_INPUT:
-			
-			
+			// don't really need to do anything here..
 			break;
-			
-		case GAME_STATE_PLAYERATTACK:
-			_creatureUser.resetNextAttackCounter();
+
+		case GAME_STATE_ATTACK:
+
 			break;
-			
-		case GAME_STATE_ENEMYATTACK:
-			_creatureOther.resetNextAttackCounter();
-			break;
-			
 		}
 
 	}
@@ -260,8 +253,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	 * Local player uses an attack. Called by BattleActivity
 	 */
 	public void performAttack_Player(String attackName) {
-		ATTACK = ResourceManager.getAttack(getResources(), attackName);
-		setGameState(GAME_STATE_PLAYERATTACK);
+		ATTACK = ResourceManager.getAttack(getResources(), attackName, _creatureUser, _creatureOther);
+		setGameState(GAME_STATE_ATTACK);
 
 	}
 
@@ -273,8 +266,9 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 		// Get random attack
 		int index = (int) Math.floor(Math.random() * _creatureOther.getAttackList().size());
-		ATTACK = ResourceManager.getAttack(getResources(), _creatureOther.getAttackList().get(index));
-		setGameState(GAME_STATE_ENEMYATTACK);
+		String attackName = _creatureOther.getAttackList().get(index);
+		ATTACK = ResourceManager.getAttack(getResources(), attackName, _creatureOther, _creatureUser);
+		setGameState(GAME_STATE_ATTACK);
 
 	}
 
