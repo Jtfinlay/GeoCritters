@@ -28,25 +28,26 @@ arcpy.Buffer_analysis(in_features, temp_features, buffer_distance)
 
 # Cursors
 bufferedFeatures = arcpy.SearchCursor(temp_features)
+targetFeatures = arcpy.SearchCursor(out_features);
 insertCursor = arcpy.InsertCursor(out_features);
 
 for feature in bufferedFeatures:
     # format the output geometry
     theShape = feature.getValue("Shape")
-    tmp = theShape.area
-    targetFeatures = arcpy.SearchCursor(out_features);
+
     for ofeature in targetFeatures:
         oShape = ofeature.getValue("Shape")
         if theShape.intersect(oShape, 4):
             theShape = theShape.difference(oShape);
-    #print(tmp - theShape.area)
+
     # add as new feature
     newFeature = insertCursor.newRow()
     newFeature.type = spatial_type
     newFeature.source = env.workspace + in_features
     insertCursor.insertRow(newFeature)
-
+        
 # clean up
 del newFeature
 del insertCursor
+
  
