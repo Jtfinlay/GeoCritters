@@ -21,22 +21,24 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int ground=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int kangaroo=0x7f020002;
-        public static final int squirtle=0x7f020003;
+        public static final int bulbasaur=0x7f020000;
+        public static final int ground=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int kangaroo=0x7f020003;
+        public static final int squirtle=0x7f020004;
     }
     public static final class id {
-        public static final int Actions=0x7f090001;
-        public static final int BattleView=0x7f090000;
-        public static final int Bottom_Panel=0x7f090006;
-        public static final int Buttons=0x7f090007;
-        public static final int MessageView=0x7f090008;
-        public static final int action_settings=0x7f090009;
-        public static final int button1=0x7f090002;
-        public static final int button2=0x7f090003;
-        public static final int button3=0x7f090004;
-        public static final int button4=0x7f090005;
+        public static final int BattleView=0x7f090002;
+        public static final int Bottom_Panel=0x7f090003;
+        public static final int Buttons=0x7f090004;
+        public static final int MessageView=0x7f090009;
+        public static final int action_settings=0x7f09000a;
+        public static final int btnGetLocation=0x7f090000;
+        public static final int button1=0x7f090005;
+        public static final int button2=0x7f090006;
+        public static final int button3=0x7f090007;
+        public static final int button4=0x7f090008;
+        public static final int txtMessage=0x7f090001;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

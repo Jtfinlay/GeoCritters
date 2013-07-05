@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.finlay.geomonsters.battle.BattleActivity"
+            android:name="com.finlay.geomonsters.MainActivity"
             android:screenOrientation="landscape"
             android:label="@string/app_name" >
             <intent-filter>
@@ -25,6 +25,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.finlay.geomonsters.battle.BattleActivity"
+            android:screenOrientation="landscape"
+            android:label="@string/app_name" >
+            
         </activity>
     </application>
 

@@ -45,16 +45,20 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		super(context, attributeSet);
 
 		getHolder().addCallback(this);
+
+
+		_Thread = new GameThread(getHolder(), this);
+		_paint = new Paint();	
+
+		setFocusable(true);
+	}
+	public void init(String enemyName) {
 		_creatureUser = ResourceManager.newCreature(getResources(), "Kangoo");
-		_creatureOther = ResourceManager.newCreature(getResources(), "Squirtle");
+		_creatureOther = ResourceManager.newCreature(getResources(), enemyName);
+		
 		_userInfo = new InfoBar(_creatureUser);
 		_otherInfo = new InfoBar(_creatureOther);
 		_otherInfo.alignRight();
-
-		_paint = new Paint();
-		_Thread = new GameThread(getHolder(), this);	
-
-		setFocusable(true);
 	}
 
 	public Creature getCreature_User() {
@@ -122,6 +126,10 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	 * @param canvas
 	 */
 	public void render(Canvas canvas) {
+		
+		// ensure creatures are set
+		if (_creatureUser == null || _creatureOther == null)
+			return;
 
 		float dx, dy;
 

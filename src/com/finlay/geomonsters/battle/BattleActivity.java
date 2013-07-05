@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 import com.finlay.geomonsters.R;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,7 +48,10 @@ public class BattleActivity extends Activity {
 
 		//setContentView(new DrawingPanel(this));
 		setContentView(R.layout.battle);
-
+		
+		Intent intent = getIntent();
+		String enemyName = intent.getStringExtra("ENEMYNAME");
+		
 		btn1 = (Button) findViewById(R.id.button1);
 		btn2 = (Button) findViewById(R.id.button2);
 		btn3 = (Button) findViewById(R.id.button3);
@@ -60,8 +64,7 @@ public class BattleActivity extends Activity {
 
 		msgPanel.setCharacterDelay(50);
 		drawingPanel.setCustomListener(new MyDrawingPanelListener());
-
-
+		drawingPanel.init(enemyName);
 		drawingPanel.setOnTouchListener(new MyViewTouchListener());
 		bottomPanel.setOnTouchListener(new MyViewTouchListener());
 
@@ -107,7 +110,7 @@ public class BattleActivity extends Activity {
 
 
 		if (attacks.size() == 0) 
-			Log.e(TAG, "No Attacks found for creature " + "Kangoo");
+			Log.e(TAG, "No Attacks found for creature " + user_creature.getName());
 
 		if (attacks.size() >= 1) {
 			btn1.setText(attacks.get(0));
