@@ -56,10 +56,10 @@ public class ResourceManager {
 				String imageName = creature.getAttribute(KEY_IMAGE);
 				int resID = res.getIdentifier(imageName, "drawable", "com.finlay.geomonsters");
 				Bitmap image = BitmapFactory.decodeResource(res, resID);
-				
+
 				// type
 				String type = creature.getAttribute(KEY_TYPE);
-				
+
 				// speed
 				int speed = Integer.parseInt(creature.getAttribute(KEY_SPEED));
 
@@ -79,12 +79,12 @@ public class ResourceManager {
 	}
 
 	public static Attack getAttack(Resources res, 
-									String attack_name,
-									Creature attacker,
-									Creature defender) {
-		
+			String attack_name,
+			Creature attacker,
+			Creature defender) {
+
 		Attack result = null;
-		
+
 		try {
 			final String KEY		= "attack";
 			final String KEY_NAME	= "name";
@@ -94,17 +94,17 @@ public class ResourceManager {
 			XMLParser parser = new XMLParser();
 			InputStream resStream = res.openRawResource(R.raw.attacks);
 			Document doc = parser.getDomElement(resStream);
-			
+
 			NodeList attacks = doc.getElementsByTagName(KEY);
-			
+
 			// cycle through creatures
 			for (int i=0; i < attacks.getLength(); i++) {
-				
+
 				Element attack = (Element) attacks.item(i);
-				
+
 				// is this the attack?
 				if (attack.getAttribute(KEY_NAME).equals(attack_name)) {
-					
+
 					// get attributes
 					String type 	= attack.getAttribute(KEY_TYPE);
 					int animation 	= Integer.parseInt(attack.getAttribute(KEY_ANIME));
@@ -113,16 +113,16 @@ public class ResourceManager {
 					break;
 				}
 			}
-			
+
 			resStream.close();
 		} catch (IOException e) {
 			Log.e(TAG, e.getMessage());
 		}
-		
-		
+
+
 		return result;
 	}
-	
+
 	public static int getColorOfAttack(Resources res, String attack_name) {
 
 		int result = 0;
@@ -146,7 +146,7 @@ public class ResourceManager {
 			if (attack.getAttribute(KEY_NAME).equals(attack_name)) {
 
 				String type = attack.getAttribute(KEY_TYPE);
-		
+
 				result =  getColorOfType(res, type);
 				break;
 			}
@@ -231,6 +231,34 @@ public class ResourceManager {
 		return result;
 	}
 
-	
+	public static ArrayList<String> getUserCreatures(Resources res) {
+
+		ArrayList<String> result = new ArrayList<String>();
+
+		try {
+			final String KEY		= "creature";
+			final String KEY_NAME	= "name";
+
+			XMLParser parser = new XMLParser();
+			InputStream resStream = res.openRawResource(R.raw.user_creatures);
+			Document doc = parser.getDomElement(resStream);
+
+			NodeList creatures = doc.getElementsByTagName(KEY);
+
+			// cycle through creatures
+			for (int i=0; i < creatures.getLength(); i++) {
+
+				Element creature = (Element) creatures.item(i);
+				result.add(creature.getAttribute(KEY_NAME));
+			}
+
+			resStream.close();
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		}
+
+
+		return result;
+	}
 
 }

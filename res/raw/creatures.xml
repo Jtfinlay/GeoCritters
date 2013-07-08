@@ -4,7 +4,8 @@
     <creature name="Kangoo"
         type="normal"
         image="kangaroo"
-        speed="2000">
+        speed="2356"
+        location="none">
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
@@ -15,7 +16,8 @@
     <creature name="Squirtle"
         type="water"
         image="squirtle"
-        speed="2800">
+        speed="2800"
+        location="water">
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
@@ -25,10 +27,24 @@
     <creature name="Bulbasaur"
         type="grass"
         image="bulbasaur"
-        speed="3000">
+        speed="2998"
+        location="forest">
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
         <attack>Creme Brulee</attack>
     </creature>
+    
+    <creature name="Haunter"
+        type="ghost"
+        image="haunter"
+        speed="2876"
+        location="cemetery">
+        <attack>Kick</attack>
+        <attack>Bubble</attack>
+    	<attack>Stick Poke</attack>
+        <attack>Creme Brulee</attack>   
+    </creature>
+    
+    
 </resources>

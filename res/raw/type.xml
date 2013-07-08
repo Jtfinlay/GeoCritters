@@ -57,5 +57,14 @@
         normal="2"
         water="3"
         color="#b8f9c4" />
+    <element
+        name="ghost"
+        fire="2"
+        grass="2"
+        ground="2"
+        lightning="2"
+        normal="2"
+        water="2"
+        color="#808080" />
 
 </resources>

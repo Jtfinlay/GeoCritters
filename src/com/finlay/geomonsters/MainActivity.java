@@ -226,10 +226,16 @@ public class MainActivity extends Activity {
 		locationManager.removeUpdates(locationListener);
 		try {
 			Intent intent = new Intent(this, BattleActivity.class);	
-			if (s.equals("g"))
+			
+			// TODO: Look up creature in area & percent change of hitting
+			if (s.equals("forest"))
 				intent.putExtra("ENEMYNAME", "Bulbasaur");
-			else
+			else if (s.equals("water"))
 				intent.putExtra("ENEMYNAME", "Squirtle");
+			else if (s.equals("cemetery"))
+				intent.putExtra("ENEMYNAME", "Haunter");
+			else
+				intent.putExtra("ENEMYNAME", "Kangoo");
 			startActivity(intent);
 		} catch (Exception e) {
 			e.printStackTrace();
