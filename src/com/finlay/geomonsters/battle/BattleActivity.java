@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.*;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class BattleActivity extends Activity {
+public class BattleActivity extends FragmentActivity implements ChooseCreatureDialog.ChooseCreatureDialogListener {
 
 	private static final String TAG = "BattleActivity";
 
@@ -174,7 +175,9 @@ public class BattleActivity extends Activity {
 			} else if (thisButton.getText().equals("Inventory")) {
 				// TODO: Inventory
 			} else if (thisButton.getText().equals("GeoMonsters")) {
-				// TODO: GeoMonsters
+				// Create instance of ChooseCreatureDialog and show it
+				DialogFragment dialog = new ChooseCreatureDialog();
+				dialog.show(getSupportFragmentManager(), "ChooseCreatureDialog");
 			} else if (thisButton.getText().equals("Flee")) {
 				finish();
 			} else {
@@ -233,5 +236,11 @@ public class BattleActivity extends Activity {
 				}
 			});
 		}
+	}
+	@Override
+	public void onCreatureChosen(DialogFragment dialog) {
+		// Called when creature has been chosen
+		Log.v(TAG, "onCreatureChosen: ");
+		
 	}
 }
