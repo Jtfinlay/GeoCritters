@@ -20,13 +20,13 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	private static final String TAG = "DrawingPanel";
 
-	private GameThread _Thread;							// Game Thread
-	private Paint _paint;								// Paint object
-	private Creature _creatureUser, _creatureOther;		// Both creatures
-	private InfoBar _userInfo, _otherInfo;				// Info bars for creatures
-	private RectF leftDraw, rightDraw;					// Creatures are drawn in left and right rects
+	private GameThread _Thread;									// Game Thread
+	private Paint _paint;										// Paint object
+	private Creature _creatureUser, _creatureOther;				// Both creatures
+	private InfoBar _userInfo, _otherInfo;						// Info bars for creatures
+	private RectF leftDraw, rightDraw;							// Creatures are drawn in left and right rects
 
-	private DrawingPanelListener customListener;
+	private DrawingPanelListener customListener;				// allows canvas to send messages to the Activity
 
 	private static final int GAME_STATE_SETUP			= 0;	// Setup phase
 	private static final int GAME_STATE_IDLE			= 1;	// Between attacks
@@ -36,12 +36,12 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int GAME_STATE_ENEMYDEAD		= 5;	// Other is dead.
 
 	private int 	GAME_STATE 			= GAME_STATE_SETUP;		// Current state of game
-	private Attack 	ATTACK;										// Info about any Actions 
+	private Attack 	ATTACK;										// Information object for attack state 
 	private int 	GAME_STEP 			= 0;					// Current step in state
 	private long 	TIMER				= 0;					// Time for current step
 	private boolean	GAME_STEP_ONTOUCH 	= false;				// Wait for touch before next GAME_STEP
 
-	private int canvas_width, canvas_height;			// Canvas dimensions
+	private int canvas_width, canvas_height;					// Canvas dimensions
 
 	public DrawingPanel(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
@@ -57,6 +57,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	public void init(String enemyName) {
 		Log.v(TAG, "init");
 		
+		// create important objects
 		_creatureUser = ResourceManager.newCreature(getResources(), "Squirtle");
 		_creatureOther = ResourceManager.newCreature(getResources(), enemyName);
 
@@ -72,6 +73,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		return _creatureOther;
 	}
 
+	/** SURFACE / DRAWING SETUP **/
+	
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.v(TAG, "surfaceChanged");
@@ -151,6 +154,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
+	/** TOUCH EVENTS **/
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
 		return false;
@@ -167,10 +172,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		return true;
 	}
 
-	/**
-	 * Draw
-	 * @param canvas
-	 */
+	/** RENDER & UPDATE **/
+	
 	public void render(Canvas canvas) {
 
 		// ensure creatures are set
@@ -226,9 +229,6 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	}
 
-	/**
-	 * Cycle through actions to perform
-	 */
 	public void update() {
 
 		// Check Step timer
@@ -255,6 +255,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	}
 
+	/** MANAGING GAME STATES **/
+	
 	public void nextGameStep() {
 
 		Log.v(TAG, "nextGameStep. STATE: " + GAME_STATE + ", STEP: " + GAME_STEP);

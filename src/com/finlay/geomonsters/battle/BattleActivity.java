@@ -46,29 +46,31 @@ public class BattleActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-		//setContentView(new DrawingPanel(this));
+		// get the Battle layout
 		setContentView(R.layout.battle);
 		
+		// Get information sent by prior activity
 		Intent intent = getIntent();
 		String enemyName = intent.getStringExtra("ENEMYNAME");
 		
+		// Layout items
 		btn1 = (Button) findViewById(R.id.button1);
 		btn2 = (Button) findViewById(R.id.button2);
 		btn3 = (Button) findViewById(R.id.button3);
 		btn4 = (Button) findViewById(R.id.button4);
 
-		btnPanel = (LinearLayout) findViewById(R.id.Buttons);
-		msgPanel = (TextWriter) findViewById(R.id.MessageView);
-		drawingPanel = (DrawingPanel) findViewById(R.id.BattleView);
-		bottomPanel = (RelativeLayout) findViewById(R.id.Bottom_Panel);
+		btnPanel = (LinearLayout) findViewById(R.id.Buttons);				// Contains buttons on bottom panel
+		msgPanel = (TextWriter) findViewById(R.id.MessageView);				// Scrolls text to bottom panel
+		drawingPanel = (DrawingPanel) findViewById(R.id.BattleView);		// Main drawing canvas
+		bottomPanel = (RelativeLayout) findViewById(R.id.Bottom_Panel);		// Bottom panel containing buttons and text
 
-		msgPanel.setCharacterDelay(50);
-		drawingPanel.setCustomListener(new MyDrawingPanelListener());
-		drawingPanel.init(enemyName);
-		drawingPanel.setOnTouchListener(new MyViewTouchListener());
-		bottomPanel.setOnTouchListener(new MyViewTouchListener());
+		msgPanel.setCharacterDelay(50);										// set Text scroll speed
+		drawingPanel.setCustomListener(new MyDrawingPanelListener());		// allows Canvas to return events to this object
+		drawingPanel.init(enemyName);										// send initialization info to canvas
+		drawingPanel.setOnTouchListener(new MyViewTouchListener());			// listen for touches on canvas
+		bottomPanel.setOnTouchListener(new MyViewTouchListener());			// listen for touches on bottom panel
 
-		BtnSetup_Default();
+		BtnSetup_Default();													// set buttons
 
 		btn1.setOnClickListener(new MyButtonClickListener());
 		btn2.setOnClickListener(new MyButtonClickListener());
@@ -78,16 +80,20 @@ public class BattleActivity extends Activity {
 	}
 
 	private void BtnSetup_Default() {
+		// Set text for each button
 		btn1.setText("Fight");
 		btn2.setText("Inventory");
 		btn3.setText("GeoMonsters");
 		btn4.setText("Flee");
 
+		// button themes
 		btn1.setBackgroundColor(Color.WHITE);
 		btn2.setBackgroundColor(Color.WHITE);
 		btn3.setBackgroundColor(Color.WHITE);
 		btn4.setBackgroundColor(Color.WHITE);
 
+		// Event when back button pressed.
+		// TODO: Confirm message before exiting Activity
 		onBackPress = new Callable<Integer>() {
 			@Override
 			public Integer call() throws Exception {
@@ -99,6 +105,7 @@ public class BattleActivity extends Activity {
 	}
 	private void BtnSetup_Fight() {
 
+		// Change button values to the attacker's attacks.
 		Creature user_creature = drawingPanel.getCreature_User();
 		ArrayList<String> attacks = user_creature.getAttackList();
 
@@ -145,7 +152,7 @@ public class BattleActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-
+		// when back button is pressed
 		Log.v(TAG, "Back pressed");
 
 		try {
@@ -157,7 +164,7 @@ public class BattleActivity extends Activity {
 	}
 
 	class MyButtonClickListener implements OnClickListener {
-
+		// events for bottomPanel buttons
 		@Override
 		public void onClick(View arg0) {
 			Button thisButton = (Button) arg0;
@@ -178,7 +185,7 @@ public class BattleActivity extends Activity {
 
 	}
 	class MyViewTouchListener implements OnTouchListener {
-
+		// For when user touches bottomPanel or canvas
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			if (System.currentTimeMillis() - clickLast < clickDelay)
@@ -196,6 +203,8 @@ public class BattleActivity extends Activity {
 
 	}
 	class MyDrawingPanelListener implements DrawingPanelListener {
+		// listens for messages from the canvas
+		
 		@Override
 		public void showButtonView() {
 			runOnUiThread(new Runnable() {
