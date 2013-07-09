@@ -2,7 +2,7 @@
 <resources>
 
     <creature name="Kangoo"
-        type="rock"
+        type="ground"
         image="kangaroo"
         speed="2356"
         location="none">
