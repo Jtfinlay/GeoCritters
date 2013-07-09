@@ -33,6 +33,7 @@ public class Creature {
 	private String 	_name;
 	private String 	_type;
 	private Bitmap 	_image;
+	private RectF	_drawRect;
 	
 	private double 	_speed; 						// Time between attacks
 	private double	_nextAttackCounter = _speed;	// Time until next attack
@@ -42,7 +43,7 @@ public class Creature {
 	private Animation 			_animation;
 	
 	private float Max_HP = 100f;	// TODO: Should get from XML.
-	private float HP = Max_HP;
+	private float HP = Max_HP;		// TODO: Get current HP from XML.
 
 	
 	public Creature(String name, Bitmap image, String type, int speed,  ArrayList<String> attacks) {
@@ -112,26 +113,30 @@ public class Creature {
 	public int getHeight() {
 		return _image.getHeight();
 	}
-	
-	public void render(RectF destination, Canvas c, Paint p) {
+	public void setDrawRect(RectF drawDest) {
+		_drawRect = drawDest;
 		
-		// we want to align the rendering on the bottom-centre of the destination rectangle
+		// we want to align the rendering on the bottom-centre of the destination rectangle,
+		// and we also need to scale the image to the given drawing area		
 		
-		float rx = destination.width() / _image.getWidth();
-		float ry = destination.height() / _image.getHeight();
+		// figure out scaling factor
+		float rx = _drawRect.width() / _image.getWidth();
+		float ry = _drawRect.height() / _image.getHeight();
 		float scale = (rx < ry) ? rx : ry;
 		
-		float dx = destination.width()*(1f-scale)/2f;
-		float dy = destination.height()-scale*_image.getHeight();
+		// position offset in relation to scaling factor
+		float dx = _drawRect.width()*(1f-scale)/2f;
+		float dy = _drawRect.height()-scale*_image.getHeight();
 		
-		Log.v(TAG, "Scale: " + scale + ", dx: " + dx + ", dy: " + dy);
-		Log.v(TAG, "rx: " + rx + ", ry: " + ry);
+		_drawRect.left += dx;
+		_drawRect.right -= dx;
+		_drawRect.top += dy;
+	}
+	
+	public void render(Canvas c, Paint p) {
+
 		
-		destination.left += dx;
-		destination.right -= dx;
-		destination.top += dy;
-		
-		c.drawBitmap(_image, null, destination, p);
+		c.drawBitmap(_image, null, _drawRect, p);
 		
 		
 		//_animation.renderFrame(c, p);
