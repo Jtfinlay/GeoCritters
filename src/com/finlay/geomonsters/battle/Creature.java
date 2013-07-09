@@ -21,6 +21,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.finlay.geomonsters.R;
@@ -112,9 +113,28 @@ public class Creature {
 		return _image.getHeight();
 	}
 	
-	
-	public void render(Canvas c, Paint p) {
-		_animation.renderFrame(c, p);
+	public void render(RectF destination, Canvas c, Paint p) {
+		
+		// we want to align the rendering on the bottom-centre of the destination rectangle
+		
+		float rx = destination.width() / _image.getWidth();
+		float ry = destination.height() / _image.getHeight();
+		float scale = (rx < ry) ? rx : ry;
+		
+		float dx = destination.width()*(1f-scale)/2f;
+		float dy = destination.height()-scale*_image.getHeight();
+		
+		Log.v(TAG, "Scale: " + scale + ", dx: " + dx + ", dy: " + dy);
+		Log.v(TAG, "rx: " + rx + ", ry: " + ry);
+		
+		destination.left += dx;
+		destination.right -= dx;
+		destination.top += dy;
+		
+		c.drawBitmap(_image, null, destination, p);
+		
+		
+		//_animation.renderFrame(c, p);
 	}
 	public void performAnimation(int animID) {
 		_animation.start(animID);

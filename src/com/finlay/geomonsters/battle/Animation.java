@@ -12,6 +12,8 @@ public class Animation {
 	public static final int KILL = 2;
 	public static final int STRIKE = 3;
 	
+	public static final int SCREEN_BUBBLE = 100;
+	
 	private int _currentAnimation = NONE;
 	private double _startTime = 0;
 	private Bitmap _image;
@@ -40,8 +42,10 @@ public class Animation {
 		case STRIKE:
 			renderFrame_Strike(c, p);
 			break;
+		case SCREEN_BUBBLE:
+			screenAnimation_Bubble(c, p);
+			break;
 		}
-		
 	}
 	
 	private void renderFrame_Strike(Canvas c, Paint p) {
@@ -95,7 +99,18 @@ public class Animation {
 		c.drawBitmap(_image, m, p);
 		
 	}
+
 	
-	
+	private void screenAnimation_Bubble(Canvas c, Paint p) {
+		
+		double time = System.currentTimeMillis() - _startTime;
+
+		Matrix m = new Matrix();
+		
+		float left = c.getWidth() / 3;
+		float right = c.getWidth()*2/3;
+		
+		
+	}
 
 }

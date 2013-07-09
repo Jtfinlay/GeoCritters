@@ -27,7 +27,7 @@
         name="fire"
         fire="1"
         grass="3"
-        ground="2"
+        ground="1"
         lightning="2"
         normal="2"
         water="1"

@@ -20,29 +20,23 @@ public class InfoBar {
 	public void alignRight() {
 		alignLeft = false;
 	}
-	public void render(Canvas c, Paint p) {
+	public void render(RectF destRect, Canvas c, Paint p) {
 		
 		// TODO: Change these depending on canvas size
-		int padding = 8;
-		int corners = 5;
-		int nameSize = 25;
-		int BARwidth = 10;
-		RectF outline = new RectF(0, 0, 250, 80);
-		
-		RectF healthbar = new RectF(outline.left+padding, 
-									outline.top+padding, 
-									outline.right-padding, 
-									outline.bottom-padding);
+		float padding = .025f*destRect.width();
+		float corners = .01f*destRect.height();
+		float nameSize = .1f*destRect.width();
+		float BARwidth = .04f*destRect.width();;
 		
 		// Draw white rect w/ black border
 		p.setStyle(Paint.Style.FILL);
 		p.setColor(Color.WHITE);
-		c.drawRoundRect(outline, corners, corners, p);
+		c.drawRoundRect(destRect, corners, corners, p);
 		
 		p.setStyle(Paint.Style.STROKE);
 		p.setStrokeWidth(3);
 		p.setColor(Color.GRAY);
-		c.drawRoundRect(outline, corners, corners, p);
+		c.drawRoundRect(destRect, corners, corners, p);
 		
 		// Creature name
 		p.setTextSize(nameSize);
@@ -50,19 +44,19 @@ public class InfoBar {
 		p.setColor(Color.DKGRAY);
 		if (alignLeft) {
 			p.setTextAlign(Paint.Align.LEFT);
-			c.drawText(_creature.getName(), padding, padding+nameSize, p);
+			c.drawText(_creature.getName(), destRect.left + padding, destRect.top + padding+nameSize, p);
 		} else {
 			p.setTextAlign(Paint.Align.RIGHT);
-			c.drawText(_creature.getName(), outline.right - padding, padding+nameSize, p);
+			c.drawText(_creature.getName(), destRect.right - padding, destRect.top + padding+nameSize, p);
 		}
 		
 		// Health bar
 		p.setStyle(Paint.Style.STROKE);
 		p.setStrokeWidth(BARwidth);
 		
-		float y = (padding+nameSize)+2*padding; 	// 2x padding distance below drawn name
-		float xi = padding;
-		float xf = outline.right - padding;
+		float y = destRect.top + (padding+nameSize)+2*padding; 	// 2x padding distance below drawn name
+		float xi = destRect.left + padding;
+		float xf = destRect.right - padding;
 		float xm = xi + (xf-xi)*_creature.getHealthPercent();
 		
 		p.setColor(Color.GREEN);

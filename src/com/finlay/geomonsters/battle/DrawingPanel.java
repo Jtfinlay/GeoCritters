@@ -7,7 +7,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -23,6 +26,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private Paint _paint;								// Paint object
 	private Creature _creatureUser, _creatureOther;		// Both creatures
 	private InfoBar _userInfo, _otherInfo;				// Info bars for creatures
+	private RectF leftDraw, rightDraw;					// Creatures are drawn in left and right rects
 
 	private DrawingPanelListener customListener;
 
@@ -53,7 +57,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		setFocusable(true);
 	}
 	public void init(String enemyName) {
-		_creatureUser = ResourceManager.newCreature(getResources(), "Kangoo");
+		_creatureUser = ResourceManager.newCreature(getResources(), "Squirtle");
 		_creatureOther = ResourceManager.newCreature(getResources(), enemyName);
 		
 		_userInfo = new InfoBar(_creatureUser);
@@ -75,6 +79,19 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas_width = surface.width();
 		canvas_height = surface.height();
 
+		// LEFT & RIGHT DRAWING AREAS
+		float xcentre = canvas_width / 4;
+		float ycentre = canvas_height / 2;
+		
+		if (xcentre > ycentre) {
+			leftDraw = new RectF(xcentre-ycentre, 0, xcentre+ycentre, canvas_height);
+			rightDraw = new RectF(3*xcentre-ycentre, 0, 3*xcentre+ycentre, canvas_height);
+		} else {
+			leftDraw = new RectF(0, ycentre-xcentre, canvas_width/2, ycentre+xcentre);
+			rightDraw = new RectF(canvas_width/2, ycentre-3*xcentre, canvas_width, ycentre+3*xcentre);
+		}
+		
+
 	}
 
 	@Override
@@ -84,6 +101,19 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		Rect surface = holder.getSurfaceFrame();
 		canvas_width = surface.width();
 		canvas_height = surface.height();
+		
+		// LEFT & RIGHT DRAWING AREAS
+		float xcentre = canvas_width / 4;
+		float ycentre = canvas_height / 2;
+		
+		if (xcentre > ycentre) {
+			leftDraw = new RectF(xcentre-ycentre, 0, xcentre+ycentre, canvas_height);
+			rightDraw = new RectF(3*xcentre-ycentre, 0, 3*xcentre+ycentre, canvas_height);
+		} else {
+			leftDraw = new RectF(0, ycentre-xcentre, canvas_width/2, ycentre+xcentre);
+			rightDraw = new RectF(canvas_width/2, ycentre-3*xcentre, canvas_width, ycentre+3*xcentre);
+		}
+		
 
 		_Thread.setRunning(true);
 		_Thread.start();
@@ -131,18 +161,68 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		if (_creatureUser == null || _creatureOther == null)
 			return;
 
-		float dx, dy;
+		RectF drawDestination;
+		Bitmap ground = BitmapFactory.decodeResource(getResources(), R.drawable.ground);
 
 		// background
 		_paint.setStyle(Paint.Style.FILL);
 		_paint.setColor(Color.WHITE);
 		canvas.drawRect(0, 0, canvas_width, canvas_height, _paint);
+		
+		
 
 		// draw ground
-		Bitmap ground = BitmapFactory.decodeResource(getResources(), R.drawable.ground);
-		canvas.drawBitmap(ground, 0, canvas_height/2+10, _paint);
-		canvas.drawBitmap(ground, (canvas_width - ground.getWidth()), canvas_height/2+10, _paint);
-
+	//	Bitmap ground = BitmapFactory.decodeResource(getResources(), R.drawable.ground);
+	//	canvas.drawBitmap(ground, 0, canvas_height/2+10, _paint);
+	//	canvas.drawBitmap(ground, (canvas_width - ground.getWidth()), canvas_height/2+10, _paint);
+		
+		// LEFT SIDE
+		canvas.save();
+		
+		// Move canvas to the topleft of the position
+		canvas.translate(leftDraw.left, leftDraw.top);
+				
+		// draw ground
+		drawDestination = new RectF(.16f*leftDraw.width(), .55f*leftDraw.height(), .83f*leftDraw.width(), .9f*leftDraw.height());
+		canvas.drawBitmap(ground, null, drawDestination, _paint);
+		
+		// draw creature
+		canvas.save();
+		
+		canvas.scale(-1f,  1f, .5f*leftDraw.width(), 0);			// flip creature horizontally
+		drawDestination = new RectF(.25f*leftDraw.width(), .28f*leftDraw.height(), .75f*leftDraw.width(), .8f*leftDraw.height());
+		_creatureUser.render(drawDestination, canvas, _paint);
+		
+		canvas.restore();
+		
+		// info bar
+		drawDestination = new RectF(.05f*leftDraw.width(), .02f*leftDraw.height(), .85f*leftDraw.width(), .25f*leftDraw.height());		
+		_userInfo.render(drawDestination, canvas, _paint);
+		
+		canvas.restore();
+		
+		
+		// RIGHT SIDE
+		canvas.save();
+		
+		// Move canvas to the topleft of the position
+		canvas.translate(rightDraw.left, rightDraw.top);
+		
+		// draw ground
+		drawDestination = new RectF(.16f*rightDraw.width(), .55f*rightDraw.height(), .83f*rightDraw.width(), .9f*rightDraw.height());
+		canvas.drawBitmap(ground, null, drawDestination, _paint);
+		
+		// draw creature
+		drawDestination = new RectF(.25f*rightDraw.width(), .28f*rightDraw.height(), .75f*rightDraw.width(), .8f*rightDraw.height());
+		_creatureOther.render(drawDestination, canvas, _paint);
+		
+		// info bar
+		drawDestination = new RectF(.15f*rightDraw.width(), .02f*rightDraw.height(), .95f*rightDraw.width(), .25f*rightDraw.height());		
+		_otherInfo.render(drawDestination, canvas, _paint);
+		
+		canvas.restore();
+		
+		/*
 		// left creature
 		canvas.save();
 		canvas.scale(-1f, 1f, .5f*canvas_width, 0);					// flip horizontally
@@ -172,7 +252,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.translate(.64f*canvas_width, .05f*canvas_height);
 		_otherInfo.render(canvas, _paint);
 		canvas.restore();
-
+*/
 
 
 
