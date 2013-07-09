@@ -29,11 +29,12 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private DrawingPanelListener customListener;				// allows canvas to send messages to the Activity
 
 	private static final int GAME_STATE_SETUP			= 0;	// Setup phase
-	private static final int GAME_STATE_IDLE			= 1;	// Between attacks
-	private static final int GAME_STATE_INPUT			= 2;	// Wait for Player input
-	private static final int GAME_STATE_ATTACK			= 3;	// Creature uses attack
-	private static final int GAME_STATE_PLAYERDEAD		= 4;	// Player is dead.
-	private static final int GAME_STATE_ENEMYDEAD		= 5;	// Other is dead.
+	private static final int GAME_STATE_START			= 1;	// "You have encountered an enemy w/e
+	private static final int GAME_STATE_IDLE			= 2;	// Between attacks
+	private static final int GAME_STATE_INPUT			= 3;	// Wait for Player input
+	private static final int GAME_STATE_ATTACK			= 4;	// Creature uses attack
+	private static final int GAME_STATE_PLAYERDEAD		= 5;	// Player is dead.
+	private static final int GAME_STATE_ENEMYDEAD		= 6;	// Other is dead.
 
 	private int 	GAME_STATE 			= GAME_STATE_SETUP;		// Current state of game
 	private Attack 	ATTACK;										// Information object for attack state 
@@ -64,6 +65,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		_userInfo = new InfoBar(_creatureUser);
 		_otherInfo = new InfoBar(_creatureOther);
 		_otherInfo.alignRight();
+		
+		setGameState(GAME_STATE_START);
 	}
 
 	public Creature getCreature_User() {
@@ -176,8 +179,8 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	
 	public void render(Canvas canvas) {
 
-		// ensure creatures are set
-		if (_creatureUser == null || _creatureOther == null)
+		// ensure data loaded
+		if (GAME_STATE == GAME_STATE_SETUP)
 			return;
 
 		
@@ -187,6 +190,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		_paint.setStyle(Paint.Style.FILL);
 		_paint.setColor(Color.WHITE);
 		canvas.drawRect(0, 0, canvas_width, canvas_height, _paint);
+		
 
 		/** LEFT SIDE **/
 		canvas.save();
@@ -263,7 +267,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 		switch (GAME_STATE) {
 
-		case GAME_STATE_SETUP:
+		case GAME_STATE_START:
 			switch (GAME_STEP) {
 			case 0:
 				showMessage("You have encountered an enemy " + _creatureOther.getName());

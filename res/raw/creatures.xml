@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <creature name="Kangoo"
-        type="ground"
+    <creature name="FireType"
+        type="fire"
         image="kangaroo"
         speed="2356"
         location="none">

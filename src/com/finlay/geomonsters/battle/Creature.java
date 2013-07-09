@@ -1,31 +1,11 @@
 package com.finlay.geomonsters.battle;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
-
-import com.finlay.geomonsters.R;
-import com.finlay.geomonsters.XMLParser;
 
 public class Creature {
 
@@ -52,7 +32,6 @@ public class Creature {
 		_attacks = attacks;
 		_speed = speed;
 		_type = type;
-		_animation = new Animation(_image);
 		
 		resetNextAttackCounter();
 
@@ -131,15 +110,13 @@ public class Creature {
 		_drawRect.left += dx;
 		_drawRect.right -= dx;
 		_drawRect.top += dy;
+		
+		_animation = new Animation(_image, _drawRect);
 	}
 	
-	public void render(Canvas c, Paint p) {
-
+	public void render(Canvas c, Paint p) {		
 		
-		c.drawBitmap(_image, null, _drawRect, p);
-		
-		
-		//_animation.renderFrame(c, p);
+		_animation.renderCreatureFrame(c, p);
 	}
 	public void performAnimation(int animID) {
 		_animation.start(animID);

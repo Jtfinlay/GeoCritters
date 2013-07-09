@@ -235,7 +235,7 @@ public class MainActivity extends Activity {
 			else if (s.equals("cemetery"))
 				intent.putExtra("ENEMYNAME", "Haunter");
 			else
-				intent.putExtra("ENEMYNAME", "Kangoo");
+				intent.putExtra("ENEMYNAME", "FireType");
 			startActivity(intent);
 		} catch (Exception e) {
 			e.printStackTrace();

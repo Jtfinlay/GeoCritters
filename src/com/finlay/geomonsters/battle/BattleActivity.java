@@ -186,17 +186,23 @@ public class BattleActivity extends Activity {
 	}
 	class MyViewTouchListener implements OnTouchListener {
 		// For when user touches bottomPanel or canvas
+		
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
+			
+			// clickDelay stops a long touch from being read as two touches
 			if (System.currentTimeMillis() - clickLast < clickDelay)
 				return false;
+			
 			clickLast = System.currentTimeMillis();
 			
+			// if bottom panel is currently writing a message, force-complete it.
 			if (msgPanel.isTyping()) {
 				msgPanel.forceEnd();
 				return false;
 			}
 
+			// tell canvas of touch event
 			return drawingPanel.sendTouchEvent(event);
 		}
 
