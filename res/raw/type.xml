@@ -11,6 +11,7 @@
         lightening="2"
         normal="2"
         water="2"
+        ghost="2"
         color="#ffffff" />
     <element
         name="water"
@@ -20,6 +21,7 @@
         lightning="2"
         normal="2"
         water="1"
+        ghost="2"
         color="#c0f1ff" />
     <element
         name="fire"
@@ -29,6 +31,7 @@
         lightning="2"
         normal="2"
         water="1"
+        ghost="2"
         color="#f0c9c9" />
     <element
         name="ground"
@@ -38,6 +41,7 @@
         lightning="3"
         normal="2"
         water="2"
+        ghost="0"
         color="#e3dcd2" />
     <element
         name="lightning"
@@ -47,6 +51,7 @@
         lightning="1"
         normal="3"
         water="3"
+        ghost="2"
         color="#f5f9b8" />
     <element
         name="grass"
@@ -56,6 +61,7 @@
         lightning="2"
         normal="2"
         water="3"
+        ghost="2"
         color="#b8f9c4" />
     <element
         name="ghost"
@@ -65,6 +71,7 @@
         lightning="2"
         normal="2"
         water="2"
+        ghost="2"
         color="#808080" />
 
 </resources>
