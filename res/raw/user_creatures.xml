@@ -2,7 +2,21 @@
 <resources>
 
     <!--  TODO: Levels, speed, etc -->
-    <creature name="Kangoo" />
-    <creature name="Haunter" />
+    <creature 
+        name="Haunter"
+        nickname="Spooky"    
+         />
+    <creature
+        name="Squirtle"
+        nickname="Bubbles"
+        />
+    <creature
+        name="Squirtle"
+        nickname="Jizz"
+        />
+    <creature
+        name="FireType"
+        nickname="LOLcatz"
+        />
     
 </resources>

@@ -29,7 +29,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private DrawingPanelListener customListener;				// allows canvas to send messages to the Activity
 
 	private static final int GAME_STATE_SETUP			= 0;	// Setup phase
-	private static final int GAME_STATE_START			= 1;	// "You have encountered an enemy w/e
+	private static final int GAME_STATE_START			= 1;	// "You have encountered an enemy w/e"
 	private static final int GAME_STATE_IDLE			= 2;	// Between attacks
 	private static final int GAME_STATE_INPUT			= 3;	// Wait for Player input
 	private static final int GAME_STATE_ATTACK			= 4;	// Creature uses attack
@@ -59,7 +59,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		Log.v(TAG, "init");
 		
 		// create important objects
-		_creatureUser = ResourceManager.newCreature(getResources(), "Squirtle");
+		_creatureUser = ResourceManager.getUserCreatures(getResources(), 0).get(0);
 		_creatureOther = ResourceManager.newCreature(getResources(), enemyName);
 
 		_userInfo = new InfoBar(_creatureUser);
@@ -295,7 +295,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 			switch(GAME_STEP) {
 			case 0:
 				// State attack
-				showMessage(ATTACK.getAttacker().getName() + " uses " + ATTACK.getName());
+				showMessage(ATTACK.getAttacker().getNickName() + " uses " + ATTACK.getName());
 				nextStepIn(200);
 				break;
 			case 1:

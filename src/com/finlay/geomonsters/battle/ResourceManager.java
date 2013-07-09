@@ -20,7 +20,7 @@ public class ResourceManager {
 
 	private static final String TAG = "ResourceManager";
 
-
+	// return new Creature instance from name
 	public static Creature newCreature(Resources res, String name) {
 
 		Creature result = null;
@@ -78,6 +78,7 @@ public class ResourceManager {
 
 	}
 
+	// return new Attack instance
 	public static Attack getAttack(Resources res, 
 			String attack_name,
 			Creature attacker,
@@ -123,6 +124,7 @@ public class ResourceManager {
 		return result;
 	}
 
+	// gets the colour attribute of given attack
 	public static int getColorOfAttack(Resources res, String attack_name) {
 
 		int result = 0;
@@ -160,6 +162,7 @@ public class ResourceManager {
 		return result;
 	}
 
+	// gets the colour attribute of given type
 	public static int getColorOfType(Resources res, String type_name) {
 
 		int result = 0;
@@ -197,6 +200,7 @@ public class ResourceManager {
 		return result;
 	}
 
+	// checks how well aggroType can hit defendType
 	public static int getTypeRating(Resources res, String aggroName, String defendName) {
 
 		int result = 0;
@@ -231,13 +235,15 @@ public class ResourceManager {
 		return result;
 	}
 
-	public static ArrayList<String> getUserCreatures(Resources res) {
+	// Load list of creatures from user_creatures
+	public static ArrayList<Creature> getUserCreatures(Resources res, int limit) {
 
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<Creature> result = new ArrayList<Creature>();
 
 		try {
-			final String KEY		= "creature";
-			final String KEY_NAME	= "name";
+			final String KEY			= "creature";
+			final String KEY_NAME		= "name";
+			final String KEY_NICKNAME	= "nickname";
 
 			XMLParser parser = new XMLParser();
 			InputStream resStream = res.openRawResource(R.raw.user_creatures);
@@ -249,14 +255,24 @@ public class ResourceManager {
 			for (int i=0; i < creatures.getLength(); i++) {
 
 				Element creature = (Element) creatures.item(i);
-				result.add(creature.getAttribute(KEY_NAME));
+				String name = creature.getAttribute(KEY_NAME);
+				String nickName = creature.getAttribute(KEY_NICKNAME);
+				
+				Creature theCreature = newCreature(res, name);
+				theCreature.setNickName(nickName);
+				
+				result.add(theCreature);
+				
+				// Check limit
+				if (limit > 0)
+					if (result.size() >= limit)
+						return result;
 			}
 
 			resStream.close();
 		} catch (IOException e) {
 			Log.e(TAG, e.getMessage());
 		}
-
 
 		return result;
 	}

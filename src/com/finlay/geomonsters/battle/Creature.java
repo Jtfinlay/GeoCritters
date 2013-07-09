@@ -11,6 +11,7 @@ public class Creature {
 
 	private static final String TAG = "Creature";
 	private String 	_name;
+	private String 	_nickName;
 	private String 	_type;
 	private Bitmap 	_image;
 	private RectF	_drawRect;
@@ -28,13 +29,22 @@ public class Creature {
 	
 	public Creature(String name, Bitmap image, String type, int speed,  ArrayList<String> attacks) {
 		_name = name;
+		_nickName = name;
 		_image = image;
 		_attacks = attacks;
 		_speed = speed;
 		_type = type;
 		
 		resetNextAttackCounter();
-
+	}
+	public String getName() {
+		return _name;
+	}
+	public String getNickName() {
+		return _nickName;
+	}
+	public void setNickName(String nickname) {
+		_nickName = nickname;
 	}
 	public ArrayList<String> getAttackList() {
 		return _attacks;
@@ -43,10 +53,6 @@ public class Creature {
 		HP -= amt;
 		HP = (HP > 0 ? HP : 0);
 	}	
-	public String getName() {
-		return _name.toUpperCase();
-	}
-	
 	public double getAttackSpeed() {
 		return _speed;
 	}
