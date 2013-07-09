@@ -1,0 +1,2 @@
+MainActivity -> Contains initial activity when client app is launched. Currently allows user to press button to gather location, connect to server, and query encounter.
+XMLParser -> Object to parse XML resource data.

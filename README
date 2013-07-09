@@ -1,0 +1,26 @@
+Welcome to the GeoMonsters Project.
+
+This project is a Pokemon-style game that uses a spatial server to query nearby geographic features to return creature encounters.
+
+Languages used: Java (Android), Javascript (Nodejs / SocketIO), PostgreSQL (Mapping server), Python (Map processing)
+
+Current geographic features mapped and queried: Watercourses, waterbodies, forests, parks, and cemeteries. Current geographic areas include the provinces of Alberta and Ontario.
+Map data originates from Open Street Maps, and was downloaded from download.geofabrik.de . 
+Meteorological data has not yet been implemented. Will likely be used from openweathermap.org .
+
+The creatures being used are not our property but here simply for testing purposes. They must be completely removed before project is released for public use.
+
+
+/// /// /// ///
+
+SERVER FOLDER -> Holds scripts, mapping templates, & nodejs code for server implementation.
+
+EVERYTHING ELSE -> Android (Java) files for client application.
+
+TO RUN CLIENT:
+	download https://github.com/Gottox/socket.io-java-client and place the socketio jar into this project's libs folder. Following this, simply the run the project as an Android app.
+
+TO RUN SERVER:
+	Install Nodejs
+	run from server directory: npm install socket.io pg
+	run from server directory: node server.js
