@@ -176,7 +176,8 @@ public class BattleActivity extends FragmentActivity implements ChooseCreatureDi
 				// TODO: Inventory
 			} else if (thisButton.getText().equals("GeoMonsters")) {
 				// Create instance of ChooseCreatureDialog and show it
-				DialogFragment dialog = new ChooseCreatureDialog();
+				ChooseCreatureDialog dialog = new ChooseCreatureDialog();
+				dialog.init(drawingPanel.getCreature_User().getNickName());
 				dialog.show(getSupportFragmentManager(), "ChooseCreatureDialog");
 			} else if (thisButton.getText().equals("Flee")) {
 				finish();
