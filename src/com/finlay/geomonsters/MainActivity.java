@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.finlay.geomonsters.R;
 import com.finlay.geomonsters.battle.BattleActivity;
 
 import io.socket.IOAcknowledge;
@@ -19,7 +20,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;

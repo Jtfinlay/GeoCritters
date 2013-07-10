@@ -8,11 +8,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
@@ -27,7 +29,7 @@ public class ChooseCreatureDialog extends DialogFragment {
 	 * implement this interface in order to receive event callbacks.
 	 */
 	public interface ChooseCreatureDialogListener {
-		public void onCreatureChosen(DialogFragment dialog);
+		public void onCreatureChosen(String name);
 	}
 
 	ChooseCreatureDialogListener mListener;
@@ -61,44 +63,55 @@ public class ChooseCreatureDialog extends DialogFragment {
 		View contentView = inflater.inflate(R.layout.change_geomonster, null);
 		ViewGroup view = (ViewGroup) contentView.findViewById(R.id.ChangeGeomonsterLayout);
 		
-		// Add a button for every creature
+		// Add a button for every creature (max of 6)
 		Button button;
 		for (Creature creature : creatures) {
 			button = new Button(contentView.getContext());
 			button.setText(creature.getNickName());
 			
 			// Can't reselect same creature
-			if (creature.getNickName().equals(_currentCreature))
-				button.setClickable(false);
+			if (creature.getNickName().equals(_currentCreature)) {
+				//TODO: Make current more visible
+				button.setTextColor(Color.WHITE);
+			}
 			
-			//TODO: Use better button styles
-			button.setBackgroundColor(ResourceManager.getColorOfType(getResources(), creature.getType()));
-
+			//TODO: Use better button styles. Change bg colour depending on hp
+			button.setBackgroundColor(Color.GREEN);
+			button.setOnClickListener(new MyButtonClickListener());
 			view.addView(button);
 		}
 		
 		// Set layout for dialog
 		builder.setView(contentView)
-		// Add action buttons
-		.setPositiveButton("Choose", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				mListener.onCreatureChosen(ChooseCreatureDialog.this);
-			}
-		})
 		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 			}
 		});
-		final Dialog res = builder.create();
 		
-		return res;
+		return builder.create();
 	}
 	
 	public void init(String currentCreatureNickName) {
 		_currentCreature = currentCreatureNickName;
 	}
+	
+
+	class MyButtonClickListener implements OnClickListener {
+		@Override
+		public void onClick(View arg0) {
+			Button button = (Button) arg0;
+			
+			if (button.getText().equals(_currentCreature))
+				dismiss();
+			else {
+				mListener.onCreatureChosen((String) button.getText());
+				dismiss();
+			}
+		}
+	}
+
 }
+
+

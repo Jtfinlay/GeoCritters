@@ -1,7 +1,5 @@
 package com.finlay.geomonsters.battle;
 
-import java.io.IOException;
-
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;

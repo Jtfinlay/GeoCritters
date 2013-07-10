@@ -1,6 +1,7 @@
 package com.finlay.geomonsters.battle;
 
 import com.finlay.geomonsters.R;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,29 +21,30 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	private static final String TAG = "DrawingPanel";
 
-	private GameThread _Thread;									// Game Thread
-	private Paint _paint;										// Paint object
-	private Creature _creatureUser, _creatureOther;				// Both creatures
-	private InfoBar _userInfo, _otherInfo;						// Info bars for creatures
-	private RectF leftDraw, rightDraw;							// Creatures are drawn in left and right rects
+	private GameThread _Thread;										// Game Thread
+	private Paint _paint;											// Paint object
+	private Creature _creatureUser, _creatureOther;					// Both creatures
+	private InfoBar _userInfo, _otherInfo;							// Info bars for creatures
+	private RectF leftDraw, rightDraw;								// Creatures are drawn in left and right rects
 
-	private DrawingPanelListener customListener;				// allows canvas to send messages to the Activity
+	private DrawingPanelListener customListener;					// allows canvas to send messages to the Activity
 
-	private static final int GAME_STATE_SETUP			= 0;	// Setup phase
-	private static final int GAME_STATE_START			= 1;	// "You have encountered an enemy w/e"
-	private static final int GAME_STATE_IDLE			= 2;	// Between attacks
-	private static final int GAME_STATE_INPUT			= 3;	// Wait for Player input
-	private static final int GAME_STATE_ATTACK			= 4;	// Creature uses attack
-	private static final int GAME_STATE_PLAYERDEAD		= 5;	// Player is dead.
-	private static final int GAME_STATE_ENEMYDEAD		= 6;	// Other is dead.
+	private static final int GAME_STATE_SETUP				= 0;		// Setup phase
+	private static final int GAME_STATE_START				= 1;		// "You have encountered an enemy w/e"
+	private static final int GAME_STATE_IDLE				= 2;		// Between attacks
+	private static final int GAME_STATE_INPUT				= 3;		// Wait for Player input
+	private static final int GAME_STATE_ATTACK				= 4;		// Creature uses attack
+	private static final int GAME_STATE_PLAYERDEAD			= 5;		// Player is dead.
+	private static final int GAME_STATE_ENEMYDEAD			= 6;		// Other is dead.
+	private static final int GAME_STATE_CHANGECREATURE		= 7;		// Change Creature
 
-	private int 	GAME_STATE 			= GAME_STATE_SETUP;		// Current state of game
-	private Attack 	ATTACK;										// Information object for attack state 
-	private int 	GAME_STEP 			= 0;					// Current step in state
-	private long 	TIMER				= 0;					// Time for current step
-	private boolean	GAME_STEP_ONTOUCH 	= false;				// Wait for touch before next GAME_STEP
+	private int 		GAME_STATE 			= GAME_STATE_SETUP;		// Current state of game
+	private StateInfo 	STATE_INFO;									// Information object for AttackInfo state 
+	private int 		GAME_STEP 			= 0;					// Current step in state
+	private long 		TIMER				= 0;					// Time for current step
+	private boolean		GAME_STEP_ONTOUCH 	= false;				// Wait for touch before next GAME_STEP
 
-	private int canvas_width, canvas_height;					// Canvas dimensions
+	private int canvas_width, canvas_height;						// Canvas dimensions
 
 	public DrawingPanel(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
@@ -295,43 +297,43 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 			switch(GAME_STEP) {
 			case 0:
 				// State attack
-				showMessage(ATTACK.getAttacker().getNickName() + " uses " + ATTACK.getName());
+				showMessage(STATE_INFO.getAttacker().getNickName() + " uses " + STATE_INFO.getName());
 				nextStepIn(200);
 				break;
 			case 1:
 				// Attack animation
-				ATTACK.getAttacker().performAnimation(Animation.STRIKE);
+				STATE_INFO.getAttacker().performAnimation(Animation.STRIKE);
 				nextStepOnTouch();	
 				break;
 			case 2:
 				// Super effective?
-				if (ATTACK.getEffectiveMessage().equals(""))
+				if (STATE_INFO.getEffectiveMessage().equals(""))
 					nextStep();
 				else {
-					showMessage(ATTACK.getEffectiveMessage());
+					showMessage(STATE_INFO.getEffectiveMessage());
 					nextStepIn(200);
 				}
 				break;
 			case 3:
 				// Hurt & Animation
-				if (ATTACK.getDamageDealt() == 0)
+				if (STATE_INFO.getDamageDealt() == 0)
 					nextStep();
 				else {
-					ATTACK.getDefender().performAnimation(Animation.HURT);
+					STATE_INFO.getDefender().performAnimation(Animation.HURT);
 					nextStepIn(200);
 				}
 				break;
 			case 4:
-				if (ATTACK.getDamageDealt() == 0)
+				if (STATE_INFO.getDamageDealt() == 0)
 					nextStep();
 				else {
-					ATTACK.getDefender().Hurt(ATTACK.getDamageDealt());
+					STATE_INFO.getDefender().Hurt(STATE_INFO.getDamageDealt());
 					nextStepOnTouch();
 				}
 				break;
 			case 5:
 				// Back to idle
-				ATTACK.getAttacker().resetNextAttackCounter();
+				STATE_INFO.getAttacker().resetNextAttackCounter();
 				setGameState(GAME_STATE_IDLE);
 				break;
 
@@ -347,6 +349,26 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		case GAME_STATE_ENEMYDEAD:
 			showMessage("Yay! You killed him. Now, GTFO.");
 			_creatureOther.performAnimation(Animation.KILL);
+			break;
+			
+			
+		case GAME_STATE_CHANGECREATURE:
+			switch(GAME_STEP) {
+			case 0:
+				showMessage(STATE_INFO.getOutgoing().getNickName() + ", that's enough!");
+				nextStepOnTouch();
+				break;
+			case 1:
+				showMessage("Go, " + STATE_INFO.getIncoming().getNickName() + "! Kick his ass!");
+				nextStepOnTouch();
+				break;
+			case 2:
+				STATE_INFO.setIncomingAsOutgoing();
+				Log.v(TAG, _creatureUser.getNickName() + ", " + STATE_INFO.getIncoming().getNickName());
+				STATE_INFO.getIncoming().resetNextAttackCounter();
+				setGameState(GAME_STATE_IDLE);
+				break;
+			}
 			break;
 		}
 
@@ -369,16 +391,16 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 		if (GAME_STATE == GAME_STATE_ATTACK) {
 			// check for death -- TODO: Make this less shitty
-			if (ATTACK.getDefender().getHP() == 0) {
-				if (ATTACK.getDefender().equals(_creatureUser)) 
+			if (STATE_INFO.getDefender().getHP() == 0) {
+				if (STATE_INFO.getDefender().equals(_creatureUser)) 
 					GAME_STATE = GAME_STATE_PLAYERDEAD;
 				else 
 					GAME_STATE = GAME_STATE_ENEMYDEAD;					
 
 				nextGameStep();
 				return;
-			} else if (ATTACK.getAttacker().getHP() == 0){
-				if (ATTACK.getAttacker().equals(_creatureUser)) 
+			} else if (STATE_INFO.getAttacker().getHP() == 0){
+				if (STATE_INFO.getAttacker().equals(_creatureUser)) 
 					GAME_STATE = GAME_STATE_PLAYERDEAD;
 				else 
 					GAME_STATE = GAME_STATE_ENEMYDEAD;					
@@ -398,12 +420,12 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		GAME_STATE = state;
 		nextGameStep();
 	}
-
+	
 	/**
 	 * Local player uses an attack. Called by BattleActivity
 	 */
 	public void performAttack_Player(String attackName) {
-		ATTACK = ResourceManager.getAttack(getResources(), attackName, _creatureUser, _creatureOther);
+		STATE_INFO = ResourceManager.getAttack(getResources(), attackName, _creatureUser, _creatureOther);
 		setGameState(GAME_STATE_ATTACK);
 
 	}
@@ -412,16 +434,19 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	 * Other player uses an attack. 
 	 */
 	public void performAttack_Other() {
-		//TODO: Maybe not have it random? I dunno.
 
 		// Get random attack
 		int index = (int) Math.floor(Math.random() * _creatureOther.getAttackList().size());
 		String attackName = _creatureOther.getAttackList().get(index);
-		ATTACK = ResourceManager.getAttack(getResources(), attackName, _creatureOther, _creatureUser);
+		STATE_INFO = ResourceManager.getAttack(getResources(), attackName, _creatureOther, _creatureUser);
 		setGameState(GAME_STATE_ATTACK);
 
 	}
-
+	public void ChangeUserCreature(String nickname) {
+		STATE_INFO = new StateInfo();
+		STATE_INFO.setAsCreatureSwitch(_creatureUser, ResourceManager.getUserCreatureByNickName(getResources(), nickname));
+		setGameState(GAME_STATE_CHANGECREATURE);
+	}
 	/**
 	 * Uses DrawingPanelListener interface to send information to the bottom panel.
 	 * @param listen

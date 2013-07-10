@@ -5,7 +5,6 @@ import java.util.concurrent.Callable;
 
 import com.finlay.geomonsters.R;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class BattleActivity extends FragmentActivity implements ChooseCreatureDialog.ChooseCreatureDialogListener {
 
@@ -239,9 +237,9 @@ public class BattleActivity extends FragmentActivity implements ChooseCreatureDi
 		}
 	}
 	@Override
-	public void onCreatureChosen(DialogFragment dialog) {
+	public void onCreatureChosen(String s) {
 		// Called when creature has been chosen
-		Log.v(TAG, "onCreatureChosen: ");
-		
+		Log.v(TAG, "onCreatureChosen: " + s);
+		drawingPanel.ChangeUserCreature(s); 
 	}
 }

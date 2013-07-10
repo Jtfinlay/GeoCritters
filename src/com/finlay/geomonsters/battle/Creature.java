@@ -15,6 +15,7 @@ public class Creature {
 	private String 	_type;
 	private Bitmap 	_image;
 	private RectF	_drawRect;
+	private RectF	_original_drawRect;
 	
 	private double 	_speed; 						// Time between attacks
 	private double	_nextAttackCounter = _speed;	// Time until next attack
@@ -36,6 +37,15 @@ public class Creature {
 		_type = type;
 		
 		resetNextAttackCounter();
+	}
+	// Called when replacing this instance with a new creature instance
+	public void setAs(Creature other) {
+		_name = other.getName();
+		_nickName = other.getNickName();
+		_image = other.getImage();
+		_speed = other.getAttackSpeed();
+		_type = other.getType();
+		this.setDrawRect(_original_drawRect);
 	}
 	public String getName() {
 		return _name;
@@ -99,6 +109,7 @@ public class Creature {
 		return _image.getHeight();
 	}
 	public void setDrawRect(RectF drawDest) {
+		_original_drawRect = new RectF(drawDest);
 		_drawRect = drawDest;
 		
 		// we want to align the rendering on the bottom-centre of the destination rectangle,
@@ -121,7 +132,6 @@ public class Creature {
 	}
 	
 	public void render(Canvas c, Paint p) {		
-		
 		_animation.renderCreatureFrame(c, p);
 	}
 	public void performAnimation(int animID) {

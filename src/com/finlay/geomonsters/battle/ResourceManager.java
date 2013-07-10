@@ -16,6 +16,7 @@ import android.util.Log;
 import com.finlay.geomonsters.R;
 import com.finlay.geomonsters.XMLParser;
 
+
 public class ResourceManager {
 
 	private static final String TAG = "ResourceManager";
@@ -79,12 +80,12 @@ public class ResourceManager {
 	}
 
 	// return new Attack instance
-	public static Attack getAttack(Resources res, 
+	public static StateInfo getAttack(Resources res, 
 			String attack_name,
 			Creature attacker,
 			Creature defender) {
 
-		Attack result = null;
+		StateInfo result = null;
 
 		try {
 			final String KEY		= "attack";
@@ -110,7 +111,8 @@ public class ResourceManager {
 					String type 	= attack.getAttribute(KEY_TYPE);
 					int animation 	= Integer.parseInt(attack.getAttribute(KEY_ANIME));
 					int rating = ResourceManager.getTypeRating(res, type, defender.getType());
-					result = new Attack(attack_name, type, animation, rating, attacker, defender);
+					result = new StateInfo();
+					result.setAsAttack(attack_name, type, animation, rating, attacker, defender);
 					break;
 				}
 			}
@@ -277,4 +279,38 @@ public class ResourceManager {
 		return result;
 	}
 
+	// Get creature from user_creatires from given unique nickname
+	public static Creature getUserCreatureByNickName(Resources res, String nickname) {
+
+		try {
+			final String KEY			= "creature";
+			final String KEY_NAME		= "name";
+			final String KEY_NICKNAME	= "nickname";
+
+			XMLParser parser = new XMLParser();
+			InputStream resStream = res.openRawResource(R.raw.user_creatures);
+			Document doc = parser.getDomElement(resStream);
+
+			NodeList creatures = doc.getElementsByTagName(KEY);
+
+			// cycle through creatures
+			for (int i=0; i < creatures.getLength(); i++) {
+
+				Element creature = (Element) creatures.item(i);
+				
+				if (creature.getAttribute(KEY_NICKNAME).equals(nickname)) {
+					String name = creature.getAttribute(KEY_NAME);
+					Creature theCreature =  newCreature(res, name);
+					theCreature.setNickName(nickname);
+					return theCreature;
+				}
+			}
+
+			resStream.close();
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		}
+
+		return null;
+	}
 }
