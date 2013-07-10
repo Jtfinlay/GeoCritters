@@ -45,6 +45,7 @@ public class Creature {
 		_image = other.getImage();
 		_speed = other.getAttackSpeed();
 		_type = other.getType();
+		resetNextAttackCounter();
 		this.setDrawRect(_original_drawRect);
 	}
 	public String getName() {

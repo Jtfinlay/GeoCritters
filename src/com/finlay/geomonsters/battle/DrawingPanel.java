@@ -364,7 +364,6 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 				break;
 			case 2:
 				STATE_INFO.setIncomingAsOutgoing();
-				Log.v(TAG, _creatureUser.getNickName() + ", " + STATE_INFO.getIncoming().getNickName());
 				STATE_INFO.getIncoming().resetNextAttackCounter();
 				setGameState(GAME_STATE_IDLE);
 				break;
