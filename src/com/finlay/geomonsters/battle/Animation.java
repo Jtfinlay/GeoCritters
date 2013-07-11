@@ -68,7 +68,7 @@ public class Animation {
 		float final_time = 1000f;
 
 		float x = (float) (c.getWidth() - ((time/final_time)*c.getWidth()));
-		x = (x < _destRect.left) ? _destRect.left : x;
+		x = (x < 0) ? 0 : x;
 		
 		drawRect.offset(x, 0); // hide out of screen
 
