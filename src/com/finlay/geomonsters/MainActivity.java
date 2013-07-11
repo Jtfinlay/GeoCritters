@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 	private TextView theTextView = null;
 
 	private LocationManager locationManager = null;
-	private LocationListener locationListener = null;
+	private MyLocationListener locationListener = null;
 	private static final String URL = "http://204.191.142.13:8000/";
 
 	@Override
@@ -68,6 +68,21 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.v(TAG, "onStop");
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "onDestroy");
+		if (locationListener != null)
+			locationListener.closeConnection();		// close SocketIO connection
+		
+		super.onDestroy();
+	}
 
 	private class MyButtonClickListener implements OnClickListener {
 
@@ -91,20 +106,21 @@ public class MainActivity extends Activity {
 		private SocketIO socket;
 
 		public MyLocationListener() {
-			socket = new SocketIO();
+			if (socket == null)
+				socket = new SocketIO();
 		}
 
 		@Override
 		public void onLocationChanged(Location loc) {
 
-			if (!socket.isConnected())
+			if (!socket.isConnected()) {
 				try {
 					theButton.setText("Connecting to server...");
 					socket.connect(URL, new MyIOCallback());
 				} catch (MalformedURLException e) {
 					Log.e(TAG, e.getMessage());
 				}
-
+			}
 
 			Log.v(TAG, "Location Changed");
 			Toast.makeText(getBaseContext(), "Location changed: Lat: " + loc.getLatitude() + " Lng: " + loc.getLongitude(), Toast.LENGTH_SHORT).show();
@@ -163,6 +179,11 @@ public class MainActivity extends Activity {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+		}
+		
+		public void closeConnection() {
+			if (socket != null)
+				socket.disconnect();
 		}
 	}
 	private class MyIOCallback implements IOCallback {
