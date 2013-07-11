@@ -21,13 +21,12 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	private static final String TAG = "DrawingPanel";
 
+	private BattleActivity _parent;									// Parent activity
 	private GameThread _Thread;										// Game Thread
 	private Paint _paint;											// Paint object
 	private Creature _creatureUser, _creatureOther;					// Both creatures
 	private InfoBar _userInfo, _otherInfo;							// Info bars for creatures
 	private RectF leftDraw, rightDraw;								// Creatures are drawn in left and right rects
-
-	private DrawingPanelListener customListener;					// allows canvas to send messages to the Activity
 
 	private static final int GAME_STATE_SETUP				= 0;		// Setup phase
 	private static final int GAME_STATE_START				= 1;		// "You have encountered an enemy w/e"
@@ -51,14 +50,15 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 		getHolder().addCallback(this);
 
-
 		_Thread = new GameThread(getHolder(), this);
 		_paint = new Paint();	
 
 		setFocusable(true);
 	}
-	public void init(String enemyName) {
+	public void init(BattleActivity activity, String enemyName) {
 		Log.v(TAG, "init");
+		
+		_parent = activity;
 		
 		// create important objects
 		_creatureUser = ResourceManager.getUserCreatures(getResources(), 0).get(0);
@@ -466,24 +466,17 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		setGameState(GAME_STATE_CHANGECREATURE);
 	}
 	/**
-	 * Uses DrawingPanelListener interface to send information to the bottom panel.
-	 * @param listen
-	 */
-	public void setCustomListener(DrawingPanelListener listen) {
-		customListener = listen;
-	}
-	/**
 	 * Write message on bottom panel
 	 * @param message
 	 */
 	private void showMessage(String message) {
-		customListener.showMessage(message);
+		_parent.showMessageView(message);
 	}
 	/**
 	 * Hide TextView, show action buttons
 	 */
 	private void showButtons() {
-		customListener.showButtonView();
+		_parent.showButtonView();
 	}
 
 

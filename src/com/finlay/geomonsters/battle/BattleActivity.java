@@ -64,8 +64,7 @@ public class BattleActivity extends FragmentActivity implements ChooseCreatureDi
 		bottomPanel = (RelativeLayout) findViewById(R.id.Bottom_Panel);		// Bottom panel containing buttons and text
 
 		msgPanel.setCharacterDelay(50);										// set Text scroll speed
-		drawingPanel.setCustomListener(new MyDrawingPanelListener());		// allows Canvas to return events to this object
-		drawingPanel.init(enemyName);										// send initialization info to canvas
+		drawingPanel.init(this, enemyName);										// send initialization info to canvas
 		drawingPanel.setOnTouchListener(new MyViewTouchListener());			// listen for touches on canvas
 		bottomPanel.setOnTouchListener(new MyViewTouchListener());			// listen for touches on bottom panel
 
@@ -210,31 +209,25 @@ public class BattleActivity extends FragmentActivity implements ChooseCreatureDi
 
 
 	}
-	class MyDrawingPanelListener implements DrawingPanelListener {
-		// listens for messages from the canvas
-		
-		@Override
-		public void showButtonView() {
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					BtnSetup_Default();
-					msgPanel.setVisibility(View.INVISIBLE);
-					btnPanel.setVisibility(View.VISIBLE);
-				}
-			});
-		}
-		@Override
-		public void showMessage(final String s) {
-			runOnUiThread(new Runnable() {
-				public void run() {
-					msgPanel.setVisibility(View.VISIBLE);
-					btnPanel.setVisibility(View.INVISIBLE);
-					//msgPanel.setText(s);
-					msgPanel.animateText(s);
-				}
-			});
-		}
+	public void showButtonView() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				BtnSetup_Default();
+				msgPanel.setVisibility(View.INVISIBLE);
+				btnPanel.setVisibility(View.VISIBLE);
+			}
+		});
+	}
+	public void showMessageView(final String s) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				msgPanel.setVisibility(View.VISIBLE);
+				btnPanel.setVisibility(View.INVISIBLE);
+				//msgPanel.setText(s);
+				msgPanel.animateText(s);
+			}
+		});
 	}
 	@Override
 	public void onCreatureChosen(String s) {
