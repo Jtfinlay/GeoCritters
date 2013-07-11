@@ -41,7 +41,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 	private int 		GAME_STATE 			= GAME_STATE_SETUP;		// Current state of game
 	private StateInfo 	STATE_INFO;									// Information object for AttackInfo state 
 	private int 		GAME_STEP 			= 0;					// Current step in state
-	private long 		TIMER				= 0;					// Time for current step
+	private long 		TIMER				= -1;					// Time for current step
 	private boolean		GAME_STEP_ONTOUCH 	= false;				// Wait for touch before next GAME_STEP
 
 	private int canvas_width, canvas_height;						// Canvas dimensions
@@ -67,8 +67,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		_userInfo = new InfoBar(_creatureUser);
 		_otherInfo = new InfoBar(_creatureOther);
 		_otherInfo.alignRight();
-		
-		setGameState(GAME_STATE_START);
+	
 	}
 
 	public Creature getCreature_User() {
@@ -140,7 +139,9 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		drawDestination = new RectF(.15f*rightDraw.width(), .02f*rightDraw.height(), .95f*rightDraw.width(), .25f*rightDraw.height());
 		_otherInfo.setDrawRect(drawDestination);
 		
-		
+		// TODO: This should probably not end up going here. Could lead to bugs when changing screen size
+		// without closing Activity
+		setGameState(GAME_STATE_START);
 	}
 
 	@Override
@@ -272,12 +273,22 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 		case GAME_STATE_START:
 			switch (GAME_STEP) {
 			case 0:
+				_creatureOther.performAnimation(Animation.ENTER_FRAME);
+				nextStepIn(400);
+				break;
+			case 1:
 				showMessage("You have encountered an enemy " + _creatureOther.getName());
 				nextStepOnTouch();
 				break;
-			case 1:
-				_creatureUser.ResumeAttackCounter();
-				_creatureOther.ResumeAttackCounter();
+			case 2:
+				showMessage("Go, " + _creatureUser.getNickName() + "! Kick his ass!");
+				nextStepOnTouch();
+				break;
+			case 3:
+				_creatureUser.performAnimation(Animation.ENTER_FRAME);
+				nextStepIn(400);	
+				break;
+			case 4:
 				setGameState(GAME_STATE_IDLE);
 				break;
 			}
@@ -359,12 +370,20 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 				nextStepOnTouch();
 				break;
 			case 1:
-				showMessage("Go, " + STATE_INFO.getIncoming().getNickName() + "! Kick his ass!");
-				nextStepOnTouch();
+				STATE_INFO.getOutgoing().performAnimation(Animation.EXIT_FRAME);
+				nextStepIn(400);
 				break;
 			case 2:
+				showMessage("Go, " + STATE_INFO.getIncoming().getNickName() + "! Kick his ass!");
 				STATE_INFO.setIncomingAsOutgoing();
 				STATE_INFO.getIncoming().resetNextAttackCounter();
+				nextStepOnTouch();
+				break;
+			case 3:
+				STATE_INFO.getOutgoing().performAnimation(Animation.ENTER_FRAME);
+				nextStepIn(400);
+				break;
+			case 4:				
 				setGameState(GAME_STATE_IDLE);
 				break;
 			}
