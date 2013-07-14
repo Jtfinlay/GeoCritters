@@ -9,6 +9,11 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+/**
+ * Handles conversations with the server.
+ * @author James
+ *
+ */
 public class MyIOCallback implements IOCallback {
 	
 	private static final String TAG = "MyIOCallback";

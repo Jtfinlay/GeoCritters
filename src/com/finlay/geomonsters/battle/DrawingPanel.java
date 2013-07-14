@@ -308,7 +308,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 			switch(GAME_STEP) {
 			case 0:
 				// State attack
-				showMessage(STATE_INFO.getAttacker().getNickName() + " uses " + STATE_INFO.getName());
+				showMessage(STATE_INFO.getAttacker().getNickName() + " uses " + STATE_INFO.getName() + ".");
 				nextStepIn(200);
 				break;
 			case 1:
