@@ -37,7 +37,8 @@ public class MainActivity extends Activity {
 
 	private static final String URL = "http://204.191.142.13:8000/";
 
-	private Button theButton = null;
+	private Button forceButton = null;
+	private Button waitButton = null;
 	private TextView theTextView = null;
 	
 	private SocketIO socket;
@@ -65,20 +66,44 @@ public class MainActivity extends Activity {
 		
 		// layout items
 		theTextView = (TextView) findViewById(R.id.txtMessage);
-		theButton = (Button) findViewById(R.id.btnGetLocation);
-		theButton.setOnClickListener(new OnClickListener() {
+		forceButton = (Button) findViewById(R.id.btnGetLocation);
+		waitButton = (Button) findViewById(R.id.btnWaitLocation);
+		
+		
+		forceButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-
-				theButton.setEnabled(false);
-				theButton.setText("...");
+				Log.v(TAG, "Force Click");
+				forceButton.setText("...");
 
 				// Best provider
 				Criteria criteria = new Criteria();
 				String bestProvider = locationManager.getBestProvider(criteria, false);
 
-				locationManager.requestLocationUpdates(bestProvider, 60, 5, locationListener);
+				locationManager.requestLocationUpdates(bestProvider, 0, 0, locationListener);
+				
+				forceButton.setEnabled(false);
+				waitButton.setEnabled(false);
 			}
+		});
+		
+		waitButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Log.v(TAG, "Wait click");
+				waitButton.setText("...");
+
+				// Best provider
+				Criteria criteria = new Criteria();
+				String bestProvider = locationManager.getBestProvider(criteria, false);
+
+				locationManager.requestLocationUpdates(bestProvider, 60, 0, locationListener);
+				
+				forceButton.setEnabled(false);
+				waitButton.setEnabled(false);
+			}
+			
 		});
 		
 		// TODO: Check storage files to see if any locations were buffered while app was closed.
