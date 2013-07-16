@@ -39,7 +39,7 @@ public class MyIOCallback implements IOCallback {
 				_mainActivity.launchBattle(obj.getString("value"));
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage());
 		}
 	}
 
@@ -58,6 +58,7 @@ public class MyIOCallback implements IOCallback {
 	@Override
 	public void onError(SocketIOException arg0) {
 		Log.v(TAG, "onError " + arg0.getMessage());
+		arg0.printStackTrace();
 
 	}
 

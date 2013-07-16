@@ -45,7 +45,8 @@ public class MainActivity extends Activity {
 	private LocationManager locationManager = null;
 	private MyLocationListener locationListener = null;
 	private WeatherManager weatherManager = null;
-
+	private Weather weatherData = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.v(TAG, "onCreated");
@@ -134,7 +135,14 @@ public class MainActivity extends Activity {
 	}
 
 	public void launchBattle(String s) {
+		// Stop location updates
 		locationManager.removeUpdates(locationListener);
+		
+		// Wait for weather data..
+		Log.v(TAG, "Wait for weatherData..");
+		while (weatherData == null) ;
+		Log.v(TAG, "Weather ID: " + weatherData.weatherID);
+		
 		try {
 			Intent intent = new Intent(this, BattleActivity.class);	
 
@@ -172,8 +180,8 @@ public class MainActivity extends Activity {
 		appendMessage("Location changed: " + longitude + ", " + latitude);
 
 		if (socket.isConnected()) {
-			// if we're connected, send the server the location
-			weatherManager.execute(loc);
+			// if we're connected, query weather data & send the server the location
+			weatherManager.execute(loc, true);
 			sendLocation(longitude, latitude);
 		} else {
 			// TODO: if not connected, save location to file. We can load this
@@ -211,6 +219,11 @@ public class MainActivity extends Activity {
 		} catch (JSONException e) {
 			Log.e(TAG, "sendLocation: " + e.getMessage());
 		}
+	}
+	public void setWeatherData(Weather weather) {
+		Log.v(TAG, "Weather data received.");
+		weatherData = weather;
+		appendMessage("Weather data received.");
 	}
 }
 
