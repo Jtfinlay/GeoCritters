@@ -1,12 +1,12 @@
 This package is for offline battling.
 
 Animation -> Animation class to draw Creature animations such as hit, hurt, death.
-Attack -> Object to help the 'attack' GAME_STATE. Stores creature information, along with the computation of hit amounts.
 BattleActivity -> Activity to manage the battle logic.
+ChooseCreatureDialog -> Dialog that opens when switching critters
 Creature -> Holds information for a creature such as health, attack speed, and image.
 DrawingPanel -> The drawing canvas for the battle app.
-DrawingPanelListener -> Allows DrawingPanel to commmunicate with the BattleActivity object
 GameThread -> Main thread to manage FPS, rendering, and updating.
 InfoBar -> item to manage bottom ButtonView / TextView. Switches visiblity of text and buttons as needed.
 ResourceManager -> Contains static functions to load resources.
+StateInfo -> Object that handles information between the game states.
 TextWriter -> Extension of TextView to make written text scroll when posted.

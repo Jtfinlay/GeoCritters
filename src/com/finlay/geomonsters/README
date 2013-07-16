@@ -1,2 +1,6 @@
-MainActivity -> Contains initial activity when client app is launched. Currently allows user to press button to gather location, connect to server, and query encounter.
+MainActivity -> Contains initial activity when client app is launched.
+MyIOCallback -> For communication with the nodejs server.
+MyLocationListener -> Uses GPS to query client position.
+Weather -> Object to store Weather info.
+WeatherManager -> Communicates with OpenWeatherMap.org API to query client meteorological information.
 XMLParser -> Object to parse XML resource data.
