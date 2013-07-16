@@ -3,6 +3,11 @@ package com.finlay.geomonsters.battle;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Hashtable;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -14,6 +19,7 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.finlay.geomonsters.R;
+import com.finlay.geomonsters.Weather;
 import com.finlay.geomonsters.XMLParser;
 
 
@@ -259,12 +265,12 @@ public class ResourceManager {
 				Element creature = (Element) creatures.item(i);
 				String name = creature.getAttribute(KEY_NAME);
 				String nickName = creature.getAttribute(KEY_NICKNAME);
-				
+
 				Creature theCreature = newCreature(res, name);
 				theCreature.setNickName(nickName);
-				
+
 				result.add(theCreature);
-				
+
 				// Check limit
 				if (limit > 0)
 					if (result.size() >= limit)
@@ -297,7 +303,7 @@ public class ResourceManager {
 			for (int i=0; i < creatures.getLength(); i++) {
 
 				Element creature = (Element) creatures.item(i);
-				
+
 				if (creature.getAttribute(KEY_NICKNAME).equals(nickname)) {
 					String name = creature.getAttribute(KEY_NAME);
 					Creature theCreature =  newCreature(res, name);
@@ -313,4 +319,83 @@ public class ResourceManager {
 
 		return null;
 	}
+
+
+
+
+
+	// Get creature encounter. TODO: Return more than just critter name
+	public static String getCreatureEncounter(Resources res, String serverReturn, Weather weatherData) {
+
+		try {
+			final String KEY		= "creature";
+			final String NAME		= "name";
+			final String ENCOUNTER	= "encounter";
+			final String WEIGHT		= "weight";
+			final String LOCATION	= "location";
+			final String CLOUDS		= "clouds";
+			final String WEATHER 	= "weather";
+
+			XMLParser parser = new XMLParser();
+			InputStream resStream = res.openRawResource(R.raw.creatures);
+			Document doc = parser.getDomElement(resStream);
+
+			// Hold creatureNames and weights. Creature names should be unique.
+			Dictionary<String, Integer> possibles = new Hashtable<String, Integer>();
+
+			// cycle through creatures
+			NodeList creatures = doc.getElementsByTagName(KEY);
+			for (int i=0; i < creatures.getLength(); i++) {
+
+				Element creature = (Element) creatures.item(i);
+
+				// cycle through encounters
+				NodeList encounters = creature.getElementsByTagName(ENCOUNTER);
+				for (int j=0; j < encounters.getLength(); j++) {
+
+					Element encounter = (Element) encounters.item(j);
+					String location = encounter.getAttribute(LOCATION);
+					String clouds = encounter.getAttribute(CLOUDS);
+					String weather = encounter.getAttribute(WEATHER);
+					int weight = Integer.parseInt(encounter.getAttribute(WEIGHT));
+
+					// only add if encounter meets requirements
+					if (!location.equals(serverReturn) && !location.equals(""))
+						continue;
+					if (!clouds.equals("") && !clouds.equals(weatherData.getCloudCover()))
+						continue;
+					if (!weather.equals("") && !weather.equals(weatherData.getWeatherType()))
+						continue;
+					
+					possibles.put(creature.getAttribute(NAME), weight);
+					Log.v(TAG, creature.getAttribute(NAME) + " added, with weight: " + weight);
+				}
+
+			}
+			
+			// Get Total weight of all possibilities
+			int weight_sum = 1;
+			Enumeration<Integer> weight = possibles.elements();
+			while (weight.hasMoreElements())
+				weight_sum += weight.nextElement();
+			// Generate number inside total weight
+			int choice = (int)(Math.random() * (weight_sum));
+
+			// Figure out which creature was decided.
+			Enumeration<String> enumElement = possibles.keys();
+			while (enumElement.hasMoreElements()) {
+				String name = enumElement.nextElement();
+				choice -= possibles.get(name);
+				
+				if (choice <= 0) return name;
+			}
+			
+			resStream.close();
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		}
+
+		return null;
+	}
+
 }

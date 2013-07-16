@@ -9,6 +9,7 @@ import io.socket.SocketIO;
 
 import com.finlay.geomonsters.R;
 import com.finlay.geomonsters.battle.BattleActivity;
+import com.finlay.geomonsters.battle.ResourceManager;
 
 import android.location.Criteria;
 import android.location.Location;
@@ -144,17 +145,10 @@ public class MainActivity extends Activity {
 		Log.v(TAG, "Weather ID: " + weatherData.weatherID);
 		
 		try {
-			Intent intent = new Intent(this, BattleActivity.class);	
-
-			// TODO: Look up creature in area & percent change of hitting
-			if (s.equals("forest"))
-				intent.putExtra("ENEMYNAME", "Bulbasaur");
-			else if (s.equals("water"))
-				intent.putExtra("ENEMYNAME", "Squirtle");
-			else if (s.equals("cemetery"))
-				intent.putExtra("ENEMYNAME", "Haunter");
-			else
-				intent.putExtra("ENEMYNAME", "FireType");
+			Intent intent = new Intent(this, BattleActivity.class);
+			// TODO: Send more than just enemy name through. Ex: Lvl, Attributes, etc.
+			intent.putExtra("ENEMYNAME", ResourceManager.getCreatureEncounter(getResources(), s, weatherData));
+			
 			startActivity(intent);
 		} catch (Exception e) {
 			Log.e(TAG, "launchBattle: " + e.getMessage());

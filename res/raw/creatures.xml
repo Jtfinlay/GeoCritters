@@ -1,54 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--  Weight is out of 100. The higher the weight, the higher the chance of encounter in that area -->
-    
+    <!--  Weight is out of 100. The higher the weight, the higher the chance of encounter in that area.
+    		If no value given for an encounter attribute, then any will do. -->
+    		
     <creature name="FireType"
         type="fire"
         image="kangaroo"
         speed="2356">
+        
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
     	<attack>Creme Brulee</attack>
         
-    	<location 
-    	    id="none"
-    	    weight="60"/>
+    	<encounter 
+    	    weight="50"
+    	    location="none" />
     	
     </creature>
     
     <creature name="Squirtle"
         type="water"
         image="squirtle"
-        speed="2800"
-        location="water">
+        speed="2800">
+    	
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
         <attack>Creme Brulee</attack>
+        
+        <encounter
+            weight="50"
+            location="water" />
+        
     </creature>
     
     <creature name="Bulbasaur"
         type="grass"
         image="bulbasaur"
-        speed="2998"
-        location="forest">
+        speed="2998">
+        
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
         <attack>Creme Brulee</attack>
+        
+        <encounter
+            weight="50"
+            location="forest" />
+        
     </creature>
     
     <creature name="Haunter"
         type="ghost"
         image="haunter"
-        speed="2876"
-        location="cemetery">
+        speed="2876">
+        
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
         <attack>Creme Brulee</attack>   
+    
+        <encounter
+            weight="50"
+            location="cemetery" />
+        
+    </creature>
+    
+    <creature name="Sunny"
+        type="fire"
+        image="sunny"
+        speed="2485">
+        
+        <attack>Kick</attack>
+        <attack>Bubble</attack>
+    	<attack>Stick Poke</attack>
+        <attack>Creme Brulee</attack>
+      
+        <encounter
+            weight="50"
+            clouds="clear" />
+        
+    </creature>
+    
+    <creature name="Thunder"
+        type="lightning"
+        image="thunder"
+        speed="2283">
+        
+        <attack>Kick</attack>
+        <attack>Bubble</attack>
+    	<attack>Stick Poke</attack>
+        <attack>Creme Brulee</attack>
+      
+        <encounter
+            weight="50"
+            weather="thunder" />        
+        
+    </creature>
+    
+    <creature name="Overcast"
+        type="water"
+        image="overcast"
+        speed="2457">
+        
+        <attack>Kick</attack>
+        <attack>Bubble</attack>
+    	<attack>Stick Poke</attack>
+        <attack>Creme Brulee</attack>
+      
+        <encounter
+            weight="50"
+            clouds="overcast" />
+                
     </creature>
     
     
