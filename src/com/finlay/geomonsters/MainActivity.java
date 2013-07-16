@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
 	private SocketIO socket;
 	private LocationManager locationManager = null;
 	private MyLocationListener locationListener = null;
+	private WeatherManager weatherManager = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,23 +53,24 @@ public class MainActivity extends Activity {
 
 		// set app to fullscreen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+		/*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+*/
 		// layout
 		setContentView(R.layout.activity_main);
 
-		// Socket and Location Manager
+		// Socket, Location Manager, Weather Manager
 		socket = new SocketIO();
 		connectSocket();
 		locationListener = new MyLocationListener(this);
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		weatherManager = new WeatherManager(this);
 		
 		// layout items
 		theTextView = (TextView) findViewById(R.id.txtMessage);
 		forceButton = (Button) findViewById(R.id.btnGetLocation);
 		waitButton = (Button) findViewById(R.id.btnWaitLocation);
-		
+
 		
 		forceButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -171,6 +173,7 @@ public class MainActivity extends Activity {
 
 		if (socket.isConnected()) {
 			// if we're connected, send the server the location
+			weatherManager.execute(loc);
 			sendLocation(longitude, latitude);
 		} else {
 			// TODO: if not connected, save location to file. We can load this

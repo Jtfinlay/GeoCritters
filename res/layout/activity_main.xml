@@ -23,7 +23,7 @@
         android:layout_height="wrap_content" 
         android:text="Wait Location"
         android:layout_centerInParent="true"
-        android:layout_below="@id/btnGetLocation"/>
+        android:layout_toRightOf="@id/btnGetLocation"/>
     
     <TextView 
         android:id="@+id/txtMessage"

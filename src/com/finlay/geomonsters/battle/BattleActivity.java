@@ -42,9 +42,9 @@ public class BattleActivity extends FragmentActivity implements ChooseCreatureDi
 
 		// set app to fullscreen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+		/*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+*/
 		// get the Battle layout
 		setContentView(R.layout.battle);
 		
