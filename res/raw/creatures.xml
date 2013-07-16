@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--  Weight is out of 100. The higher the weight, the higher the chance of encounter in that area -->
+    
     <creature name="FireType"
         type="fire"
         image="kangaroo"
-        speed="2356"
-        location="none">
+        speed="2356">
         <attack>Kick</attack>
         <attack>Bubble</attack>
     	<attack>Stick Poke</attack>
     	<attack>Creme Brulee</attack>
         
+    	<location 
+    	    id="none"
+    	    weight="60"/>
+    	
     </creature>
     
     <creature name="Squirtle"
