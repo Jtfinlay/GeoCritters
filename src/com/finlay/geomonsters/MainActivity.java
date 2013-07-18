@@ -48,16 +48,17 @@ public class MainActivity extends Activity {
 	private WeatherManager weatherManager = null;
 	private Weather weatherData = null;
 	
+	private MainActivity _activity;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.v(TAG, "onCreated");
 		super.onCreate(savedInstanceState);
+		_activity = this;
 
 		// set app to fullscreen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		/*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-*/
+		
 		// layout
 		setContentView(R.layout.activity_main);
 		
@@ -73,6 +74,9 @@ public class MainActivity extends Activity {
 		forceButton = (Button) findViewById(R.id.btnGetLocation);
 		waitButton = (Button) findViewById(R.id.btnWaitLocation);
 
+		// Disable buttons until socket is connected
+		forceButton.setEnabled(false);
+		waitButton.setEnabled(false);
 		
 		forceButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -99,10 +103,14 @@ public class MainActivity extends Activity {
 				waitButton.setText("...");
 
 				// Best provider
-				Criteria criteria = new Criteria();
-				String bestProvider = locationManager.getBestProvider(criteria, false);
+				//Criteria criteria = new Criteria();
+				//String bestProvider = locationManager.getBestProvider(criteria, false);
 
-				locationManager.requestLocationUpdates(bestProvider, 60, 0, locationListener);
+				//locationManager.requestLocationUpdates(bestProvider, 10000, 0, locationListener);
+				
+				// Start Encounter Service
+				Intent service = new Intent(_activity, EncounterService.class);
+				_activity.startService(service);
 				
 				forceButton.setEnabled(false);
 				waitButton.setEnabled(false);
@@ -192,6 +200,10 @@ public class MainActivity extends Activity {
 				Log.e(TAG, e.getMessage());
 			}
 		}
+	}
+	public void socketConnected() {
+		forceButton.setEnabled(true);
+		waitButton.setEnabled(true);
 	}
 	public void sendLocation(String longitude, String latitude) {
 		// Creates JSON object containing given location and sends

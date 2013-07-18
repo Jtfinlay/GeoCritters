@@ -32,6 +32,11 @@
             android:label="@string/app_name" >
             
         </activity>
+        <service 
+            android:name="EncounterService"
+            android:process=":geocritter_service"
+            android:icon="@drawable/ic_launcher"
+            android:label="Geocritters Location Service"></service>
     </application>
 
 </manifest>
