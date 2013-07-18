@@ -368,7 +368,7 @@ public class ResourceManager {
 						continue;
 					
 					possibles.put(creature.getAttribute(NAME), weight);
-					Log.v(TAG, creature.getAttribute(NAME) + " added, with weight: " + weight);
+					Log.v(TAG, creature.getAttribute(NAME) + " is option, with weight: " + weight);
 				}
 
 			}

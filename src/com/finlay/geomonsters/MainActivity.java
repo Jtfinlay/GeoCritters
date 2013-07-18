@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 */
 		// layout
 		setContentView(R.layout.activity_main);
-
+		
 		// Socket, Location Manager, Weather Manager
 		socket = new SocketIO();
 		connectSocket();
