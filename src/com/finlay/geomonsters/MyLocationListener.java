@@ -25,8 +25,6 @@ public class MyLocationListener implements LocationListener {
 	@Override
 	public void onLocationChanged(Location loc) {
 		Log.v(TAG, "Location Changed");
-		// TODO: Have only chance of returning hit to parent. We could have higher
-		// probability of encounter when the app is open, and lower when just service
 		_parent.locationFound(loc);
 	}
 

@@ -16,6 +16,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -50,7 +52,7 @@ public class MainActivity extends Activity implements LocationListenerParent {
 	// TODO: These are for the 'force button,' so should eventually get rid of
 	private LocationManager locationManager;
 	private MyLocationListener locationListener;
-	
+
 	private MainActivity _activity;
 	
 	@Override
@@ -65,7 +67,7 @@ public class MainActivity extends Activity implements LocationListenerParent {
 		// layout
 		setContentView(R.layout.activity_main);
 		
-		// Socket, Location Manager, Weather Manager
+		// Socket, Location Manager, Weather Manager, Encounter Service
 		locationListener = new MyLocationListener(this);
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		socket = new SocketIO();
@@ -107,8 +109,8 @@ public class MainActivity extends Activity implements LocationListenerParent {
 				waitButton.setText("...");
 			
 				// Start Encounter Service
-				Intent service = new Intent(_activity, EncounterService.class);
-				_activity.startService(service);
+				
+				_activity.startService(new Intent(_activity, EncounterService.class));
 				
 				forceButton.setEnabled(false);
 				waitButton.setEnabled(false);
