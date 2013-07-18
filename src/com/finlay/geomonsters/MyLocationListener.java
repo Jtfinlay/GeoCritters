@@ -15,22 +15,19 @@ public class MyLocationListener implements LocationListener {
 
 	private static final String TAG = "MyLocationListener";
 
-	private MainActivity _mainActivity;
+	private LocationListenerParent _parent;
 
 
-	public MyLocationListener(MainActivity activity) {
-
-		_mainActivity = activity;
-
+	public MyLocationListener(LocationListenerParent parent) {
+		_parent = parent;
 	}
 
 	@Override
 	public void onLocationChanged(Location loc) {
 		Log.v(TAG, "Location Changed");
-		
-		Toast.makeText(_mainActivity.getBaseContext(), "Location changed: Lat: " + loc.getLatitude() + " Lng: " + loc.getLongitude(), Toast.LENGTH_SHORT).show();
-
-		_mainActivity.LocationChanged(loc);
+		// TODO: Have only chance of returning hit to parent. We could have higher
+		// probability of encounter when the app is open, and lower when just service
+		_parent.locationFound(loc);
 	}
 
 	@Override

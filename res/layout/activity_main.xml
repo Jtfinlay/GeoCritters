@@ -2,35 +2,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/startup"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/startup"
     tools:context=".MainActivity" >
-    
+
     <Button
         android:id="@+id/btnGetLocation"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text="Force Location"
-        android:layout_centerInParent="true" />
-    
-    <Button 
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Force Location" />
+
+    <Button
         android:id="@+id/btnWaitLocation"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:text="Wait Location"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnGetLocation"
         android:layout_centerInParent="true"
-        android:layout_toRightOf="@id/btnGetLocation"/>
-    
-    <TextView 
+        android:text="Start Location Service" />
+
+    <TextView
         android:id="@+id/txtMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        />
-    
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

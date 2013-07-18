@@ -26,13 +26,14 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Main Activity that app begins at
  * @author James
  *
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements LocationListenerParent {
 
 	private static final String TAG = "MainActivity";
 
@@ -43,10 +44,12 @@ public class MainActivity extends Activity {
 	private TextView theTextView = null;
 	
 	private SocketIO socket;
-	private LocationManager locationManager = null;
-	private MyLocationListener locationListener = null;
 	private WeatherManager weatherManager = null;
 	private Weather weatherData = null;
+	
+	// TODO: These are for the 'force button,' so should eventually get rid of
+	private LocationManager locationManager;
+	private MyLocationListener locationListener;
 	
 	private MainActivity _activity;
 	
@@ -63,10 +66,10 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		// Socket, Location Manager, Weather Manager
-		socket = new SocketIO();
-		connectSocket();
 		locationListener = new MyLocationListener(this);
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		socket = new SocketIO();
+		connectSocket();
 		weatherManager = new WeatherManager(this);
 		
 		// layout items
@@ -75,8 +78,8 @@ public class MainActivity extends Activity {
 		waitButton = (Button) findViewById(R.id.btnWaitLocation);
 
 		// Disable buttons until socket is connected
-		forceButton.setEnabled(false);
-		waitButton.setEnabled(false);
+		//forceButton.setEnabled(false);
+		//waitButton.setEnabled(false);
 		
 		forceButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -87,8 +90,9 @@ public class MainActivity extends Activity {
 				// Best provider
 				Criteria criteria = new Criteria();
 				String bestProvider = locationManager.getBestProvider(criteria, false);
-
-				locationManager.requestLocationUpdates(bestProvider, 0, 0, locationListener);
+				
+				// Request location updates
+				locationManager.requestLocationUpdates(bestProvider, 10000, 0, locationListener);
 				
 				forceButton.setEnabled(false);
 				waitButton.setEnabled(false);
@@ -101,13 +105,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Log.v(TAG, "Wait click");
 				waitButton.setText("...");
-
-				// Best provider
-				//Criteria criteria = new Criteria();
-				//String bestProvider = locationManager.getBestProvider(criteria, false);
-
-				//locationManager.requestLocationUpdates(bestProvider, 10000, 0, locationListener);
-				
+			
 				// Start Encounter Service
 				Intent service = new Intent(_activity, EncounterService.class);
 				_activity.startService(service);
@@ -145,7 +143,7 @@ public class MainActivity extends Activity {
 
 	public void launchBattle(String s) {
 		// Stop location updates
-		locationManager.removeUpdates(locationListener);
+		//locationManager.removeUpdates(locationListener);
 		
 		// Wait for weather data..
 		Log.v(TAG, "Wait for weatherData..");
@@ -230,6 +228,19 @@ public class MainActivity extends Activity {
 		Log.v(TAG, "Weather data received.");
 		weatherData = weather;
 		appendMessage("Weather data received.");
+	}
+
+	//TODO: Once battle is done, get rid of this? We probably only want
+	// the service getting encounters.
+	@Override
+	public void locationFound(Location loc) {
+		locationManager.removeUpdates(locationListener);
+		// Make toast
+		String s = "F: " + loc.getLatitude() + ", " + loc.getLongitude();
+		Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+		
+		weatherManager.execute(loc, true);
+		sendLocation("" + loc.getLongitude(), "" + loc.getLatitude());
 	}
 }
 
