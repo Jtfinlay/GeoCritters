@@ -11,7 +11,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
@@ -53,9 +52,8 @@ public class EncounterService extends Service implements LocationListenerParent 
 		isRunning = true;
 		return Service.START_NOT_STICKY;
 	}
-	final Handler handler = new Handler() {
+	private final Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			Log.v(TAG, "Query position");
 			//TODO: Make probability of having new encounter
 			
 			Criteria criteria = new Criteria();
