@@ -89,7 +89,7 @@ public class EncounterService extends Service implements LocationListenerParent 
 
 
 		// Save encounter location & time to file
-		boolean hasRoom = ConfigManager.QueueEncounter(getApplicationContext(), loc, System.currentTimeMillis());
+		boolean hasRoom = ConfigManager.PushEncounter(getApplicationContext(), loc, System.currentTimeMillis());
 		
 		// Stop service if encounter queue is full
 		if (!hasRoom)
