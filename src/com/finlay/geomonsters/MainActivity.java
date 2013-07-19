@@ -78,6 +78,9 @@ public class MainActivity extends Activity implements LocationListenerParent {
 		theTextView = (TextView) findViewById(R.id.txtMessage);
 		forceButton = (Button) findViewById(R.id.btnGetLocation);
 		waitButton = (Button) findViewById(R.id.btnWaitLocation);
+		
+		// TODO get rid of this. For now, clear the encouters file
+		ConfigManager.ResetConfigFiles(getApplicationContext());
 
 		// Disable buttons until socket is connected
 		//forceButton.setEnabled(false);

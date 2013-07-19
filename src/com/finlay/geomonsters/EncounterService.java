@@ -24,7 +24,7 @@ public class EncounterService extends Service implements LocationListenerParent 
 	private LocationManager locationManager;
 	private MyLocationListener locationListener;
 	private Timer timer;
-	private long TIME_DELAY = 120 * 1000; // easier to see with multiplication
+	private long TIME_DELAY = 12 * 1000; // easier to see with multiplication
 
 	@Override
 	public void onCreate() {
@@ -55,6 +55,9 @@ public class EncounterService extends Service implements LocationListenerParent 
 	}
 	final Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
+			Log.v(TAG, "Query position");
+			//TODO: Make probability of having new encounter
+			
 			Criteria criteria = new Criteria();
 			String bestProvider = locationManager.getBestProvider(criteria, false);
 			locationManager.requestLocationUpdates(bestProvider, 0, 0, locationListener);
@@ -87,9 +90,12 @@ public class EncounterService extends Service implements LocationListenerParent 
 		locationManager.removeUpdates(locationListener);		
 
 
-		// TODO: Save encounter location & time to file
-
-		// TODO: Stop service if encounter queue is full
+		// Save encounter location & time to file
+		boolean hasRoom = ConfigManager.QueueEncounter(getApplicationContext(), loc, System.currentTimeMillis());
+		
+		// Stop service if encounter queue is full
+		if (!hasRoom)
+			stopSelf();
 	}
 
 	/**
