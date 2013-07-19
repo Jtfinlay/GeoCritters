@@ -142,7 +142,7 @@ public class MainActivity extends Activity implements LocationListenerParent {
 				
 				// Server & weather
 				connectSocket();
-				weatherManager.execute(latitude, longitude);
+				weatherManager.execute(longitude, latitude);
 				while (!socket.isConnected()) ;
 				
 				// Send query to server
