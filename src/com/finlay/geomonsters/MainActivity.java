@@ -264,6 +264,7 @@ public class MainActivity extends Activity implements LocationListenerParent {
 		Log.v(TAG, "Weather data received.");
 		weatherData = weather;
 		appendMessage("Weather data received.");
+		if (weatherData == null) Log.v(TAG, "Returned null :(");
 	}
 
 	//TODO: Once battle is done, get rid of this? We probably only want
@@ -275,7 +276,9 @@ public class MainActivity extends Activity implements LocationListenerParent {
 		String s = "F: " + loc.getLatitude() + ", " + loc.getLongitude();
 		Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
 
-		weatherManager.execute(loc, true);
+		weatherManager.execute(""+loc.getLongitude(), ""+loc.getLatitude(), true);
+		// ensure server connected
+		while (!socket.isConnected()) ;
 		sendLocation("" + loc.getLongitude(), "" + loc.getLatitude());
 	}
 }

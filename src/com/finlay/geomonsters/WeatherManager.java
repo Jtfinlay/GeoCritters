@@ -36,7 +36,7 @@ public class WeatherManager extends AsyncTask<Object, Void, Weather>{
 
 	// Cannot be called from main thread.
 	private String getWeatherData(String address) {		
-
+		Log.v(TAG, "getWeatherData: " + address);
 		HttpURLConnection con = null;
 		InputStream is = null;
 
@@ -80,8 +80,8 @@ public class WeatherManager extends AsyncTask<Object, Void, Weather>{
 		// Location, (boolean:true)			OR			Location, (boolean:false), Double (fromTime)
 		// For more info on using old data, check out : bugs.openweathermap.org/projects/api/wiki/Api_2_5_history
 
-		String latitude = (String) params[0];
-		String longitude = (String) params[1];
+		String longitude = (String) params[0];
+		String latitude = (String) params[1];
 		Weather weather = null;
 
 		// query weather data from openweather page
