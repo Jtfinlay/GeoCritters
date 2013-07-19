@@ -40,7 +40,7 @@ public class MainActivity extends Activity implements LocationListenerParent {
 
 	private static final String URL = "http://204.191.142.13:8000/";
 
-	private static final long SERVER_CONNECTION_TIME = 5000;
+	private static final int UPDATE_DELAY = 1000; 
 
 	private Button forceButton = null;
 	private Button waitButton = null;
@@ -131,15 +131,37 @@ public class MainActivity extends Activity implements LocationListenerParent {
 				String encounter = ConfigManager.PullEncounter(getApplicationContext());
 				if (encounter.equals("")) return;
 				
-				// TODO Use location & time from gathered string to query encounter
+				// Use location & time from gathered string to query encounter
+				String[] location = encounter.split(",");
+				String latitude = location[0];
+				String longitude = location[1];
+				// TODO We cannot get historical weatherdata accurately. So we will just use the current time :(
 				
 				// Pop used encounter from queue
 				ConfigManager.PopEncounter(getApplicationContext());
 				
-				// TODO Start battle activity
+				// Server & weather
+				connectSocket();
+				weatherManager.execute(latitude, longitude);
+				while (!socket.isConnected()) ;
+				
+				// Send query to server
+				sendLocation(longitude, latitude);
 			}			
 		});
 
+		// Change the text value of the loadEncounterButton to the number of encounters available
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						loadEncounterButton.setText("" + ConfigManager.EncounterCount(getApplicationContext()));
+					}
+				});
+			}
+		}, 0, UPDATE_DELAY);
 	}
 
 	@Override
@@ -163,13 +185,8 @@ public class MainActivity extends Activity implements LocationListenerParent {
 	}
 
 	public void launchBattle(String s) {
-		// Stop location updates
-		//locationManager.removeUpdates(locationListener);
-
-		// Wait for server connections
-		Log.v(TAG, "Wait for server connection..");
-		while (!socket.isConnected());
-
+		
+		// Wait for weather data
 		Log.v(TAG, "Wait for weatherData..");
 		while (weatherData == null) ;
 
@@ -208,7 +225,7 @@ public class MainActivity extends Activity implements LocationListenerParent {
 
 		appendMessage("Location changed: " + longitude + ", " + latitude);
 
-		weatherManager.execute(loc, true);
+		weatherManager.execute(longitude, latitude);
 		sendLocation(longitude, latitude);
 	}
 
@@ -221,10 +238,6 @@ public class MainActivity extends Activity implements LocationListenerParent {
 				Log.e(TAG, e.getMessage());
 			}
 		}
-	}
-	public void socketConnected() {
-		forceButton.setEnabled(true);
-		waitButton.setEnabled(true);
 	}
 	public void sendLocation(String longitude, String latitude) {
 		// Creates JSON object containing given location and sends

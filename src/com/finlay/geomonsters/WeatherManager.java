@@ -30,10 +30,8 @@ public class WeatherManager extends AsyncTask<Object, Void, Weather>{
 	private static final String pastURL = "http://api.openweathermap.org/data/2.5/history/city?";
 
 	private MainActivity _parent;
-	private HttpClient httpclient;
 	public WeatherManager(MainActivity parent) {
 		_parent = parent;
-		httpclient = new DefaultHttpClient();
 	}
 
 	// Cannot be called from main thread.
@@ -82,14 +80,16 @@ public class WeatherManager extends AsyncTask<Object, Void, Weather>{
 		// Location, (boolean:true)			OR			Location, (boolean:false), Double (fromTime)
 		// For more info on using old data, check out : bugs.openweathermap.org/projects/api/wiki/Api_2_5_history
 
-		Location loc = (Location) params[0];
+		String latitude = (String) params[0];
+		String longitude = (String) params[1];
 		Weather weather = null;
 
 		// query weather data from openweather page
 		// TODO: Replace 'StationID' with proper method. Need to run query to find closest location first.
 		String address;
-		if ((Boolean) params[1]) 	address = currentURL + "lat=" + loc.getLatitude() + "&lon=" + loc.getLongitude();
-		else 						address = pastURL + "id=" + "<stationid>" + "&type=hour&start=" + (Double)params[2] + "&cnt=1";		
+		//if ((Boolean) params[2]) 	
+		address = currentURL + "lat=" + latitude + "&lon=" + longitude;
+		//else 						address = pastURL + "id=" + "<stationid>" + "&type=hour&start=" + (Double)params[3] + "&cnt=1";		
 
 		String data = getWeatherData(address);
 		Log.v(TAG, "Data returned from " + address);

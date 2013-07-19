@@ -47,7 +47,6 @@ public class MyIOCallback implements IOCallback {
 	public void onConnect() {
 		Log.v(TAG, "Connection established");
 		_mainActivity.appendMessage("Connection established.");
-		_mainActivity.socketConnected();
 	}
 
 	@Override
