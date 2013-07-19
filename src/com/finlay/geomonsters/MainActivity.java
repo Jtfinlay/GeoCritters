@@ -39,24 +39,25 @@ public class MainActivity extends Activity implements LocationListenerParent {
 	private static final String TAG = "MainActivity";
 
 	private static final String URL = "http://204.191.142.13:8000/";
-	
+
 	private static final long SERVER_CONNECTION_TIME = 5000;
 
 	private Button forceButton = null;
 	private Button waitButton = null;
+	private Button loadEncounterButton = null;
 	private TextView theTextView = null;
-	
+
 	private SocketIO socket;
 	private WeatherManager weatherManager = null;
 	private Weather weatherData = null;
 	private Timer timer;
-	
+
 	// TODO: These are for the 'force button,' so should eventually get rid of
 	private LocationManager locationManager;
 	private MyLocationListener locationListener;
 
 	private MainActivity _activity;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.v(TAG, "onCreated");
@@ -65,67 +66,80 @@ public class MainActivity extends Activity implements LocationListenerParent {
 
 		// set app to fullscreen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+
 		// layout
 		setContentView(R.layout.activity_main);
-		
-		// Socket, Location Manager, Weather Manager, Encounter Service
+
+		// Socket, Location Manager, Weather Manager
 		locationListener = new MyLocationListener(this);
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		socket = new SocketIO();
-		connectSocket();
 		weatherManager = new WeatherManager(this);
-		
+
 		// layout items
 		theTextView = (TextView) findViewById(R.id.txtMessage);
 		forceButton = (Button) findViewById(R.id.btnGetLocation);
 		waitButton = (Button) findViewById(R.id.btnWaitLocation);
-		
-		// TODO get rid of this. For now, clear the encouters file
+		loadEncounterButton = (Button) findViewById(R.id.btnLoadEncounter);
+
+		// TODO get rid of this. For now, reset the encounters file whenever created
 		ConfigManager.ResetConfigFiles(getApplicationContext());
 
-		// Disable buttons until socket is connected
-		//forceButton.setEnabled(false);
-		//waitButton.setEnabled(false);
-		
 		forceButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				Log.v(TAG, "Force Click");
 				forceButton.setText("...");
 
+				// Connect to server
+				connectSocket();
+
 				// Best provider
 				Criteria criteria = new Criteria();
 				String bestProvider = locationManager.getBestProvider(criteria, false);
-				
+
 				// Request location updates
 				locationManager.requestLocationUpdates(bestProvider, 10000, 0, locationListener);
-				
+
 				forceButton.setEnabled(false);
-				waitButton.setEnabled(false);
+				loadEncounterButton.setEnabled(false);
 			}
 		});
-		
+
 		waitButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				Log.v(TAG, "Wait click");
 				waitButton.setText("...");
-			
+
 				// Start Encounter Service
-				
+				// TODO Service should be started at boot?
 				_activity.startService(new Intent(_activity, EncounterService.class));
-				
-				forceButton.setEnabled(false);
+
 				waitButton.setEnabled(false);
 			}
-			
+
 		});
-		
-		// TODO: Check storage files to see if any locations were buffered while app was closed.
-		// If some locations exist, send the location to the server (when connected) and load the encounters
-		// for the user.
+
+		loadEncounterButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				Log.v(TAG, "Load encounter clicked");
+				
+				// Pull encounter
+				String encounter = ConfigManager.PullEncounter(getApplicationContext());
+				if (encounter.equals("")) return;
+				
+				// TODO Use location & time from gathered string to query encounter
+				
+				// Pop used encounter from queue
+				ConfigManager.PopEncounter(getApplicationContext());
+				
+				// TODO Start battle activity
+			}			
+		});
+
 	}
 
 	@Override
@@ -151,18 +165,25 @@ public class MainActivity extends Activity implements LocationListenerParent {
 	public void launchBattle(String s) {
 		// Stop location updates
 		//locationManager.removeUpdates(locationListener);
-		
-		// Wait for weather data..
+
+		// Wait for server connections
+		Log.v(TAG, "Wait for server connection..");
+		while (!socket.isConnected());
+
 		Log.v(TAG, "Wait for weatherData..");
 		while (weatherData == null) ;
-		Log.v(TAG, "Weather ID: " + weatherData.weatherID);
-		
+
 		try {
 			Intent intent = new Intent(this, BattleActivity.class);
 			// TODO: Send more than just enemy name through. Ex: Lvl, Attributes, etc.
 			intent.putExtra("ENEMYNAME", ResourceManager.getCreatureEncounter(getResources(), s, weatherData));
-			
+
+			// disconnect from server
+			socket.disconnect();
+
+			// start the battle activity
 			startActivity(intent);
+
 		} catch (Exception e) {
 			Log.e(TAG, "launchBattle: " + e.getMessage());
 		}
@@ -180,20 +201,15 @@ public class MainActivity extends Activity implements LocationListenerParent {
 
 	public void LocationChanged(Location loc) {
 		// LocationManager has received GPS location
-		
+		// This is only used with the 'Force Location' button
+
 		String longitude ="" + loc.getLongitude();
 		String latitude = "" + loc.getLatitude();
-		
+
 		appendMessage("Location changed: " + longitude + ", " + latitude);
 
-		if (socket.isConnected()) {
-			// if we're connected, query weather data & send the server the location
-			weatherManager.execute(loc, true);
-			sendLocation(longitude, latitude);
-		} else {
-			// TODO: if not connected, save location to file. We can load this
-			// location later and request encounter from the server.
-		}
+		weatherManager.execute(loc, true);
+		sendLocation(longitude, latitude);
 	}
 
 	public void connectSocket() {
@@ -213,20 +229,20 @@ public class MainActivity extends Activity implements LocationListenerParent {
 	public void sendLocation(String longitude, String latitude) {
 		// Creates JSON object containing given location and sends
 		// to the connected server.
-		
+
 		if (!socket.isConnected()) {
 			Log.w(TAG, "Socket is not connected. Could not send location.");
 			return;
 		}
-			
+
 		try {
-			
+
 			JSONObject json = new JSONObject();
 			json.putOpt("longitude", longitude);
 			json.putOpt("latitude", latitude);
-			
+
 			socket.emit("user position", json);
-			
+
 		} catch (JSONException e) {
 			Log.e(TAG, "sendLocation: " + e.getMessage());
 		}
@@ -245,7 +261,7 @@ public class MainActivity extends Activity implements LocationListenerParent {
 		// Make toast
 		String s = "F: " + loc.getLatitude() + ", " + loc.getLongitude();
 		Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
-		
+
 		weatherManager.execute(loc, true);
 		sendLocation("" + loc.getLongitude(), "" + loc.getLatitude());
 	}

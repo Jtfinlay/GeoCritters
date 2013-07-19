@@ -143,6 +143,36 @@ public class ConfigManager {
 
 	}
 
+	public static int EncounterCount(Context context) {
+		
+		if (!context.getFileStreamPath(FILE_ENCOUNTERQUEUE).exists())
+			return 0;
+
+		try {
+			// Read the file and count the number of encounters
+			FileInputStream fIn = context.openFileInput(FILE_ENCOUNTERQUEUE);
+			InputStreamReader isr = new InputStreamReader(fIn);
+			BufferedReader buffreader = new BufferedReader(isr);
+
+			int counter = 0;
+			String readString = buffreader.readLine();
+			while (readString != null) {
+				counter++;
+				readString = buffreader.readLine();
+			}
+			
+			isr.close();	
+			return counter;
+
+		} catch (FileNotFoundException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		}
+		
+		return 0;
+	}
+	
 	public static void ResetConfigFiles(Context context) {
 		Log.v(TAG, "Reset config files.");
 		context.deleteFile(FILE_ENCOUNTERQUEUE);

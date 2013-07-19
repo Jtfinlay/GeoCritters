@@ -87,7 +87,6 @@ public class EncounterService extends Service implements LocationListenerParent 
 		ToastMessage("S: " + loc.getLatitude() + ", " + loc.getLongitude());
 		locationManager.removeUpdates(locationListener);		
 
-
 		// Save encounter location & time to file
 		boolean hasRoom = ConfigManager.PushEncounter(getApplicationContext(), loc, System.currentTimeMillis());
 		
