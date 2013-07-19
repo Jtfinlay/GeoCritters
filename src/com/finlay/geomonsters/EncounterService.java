@@ -39,7 +39,7 @@ public class EncounterService extends Service implements LocationListenerParent 
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.v(TAG, "onStartCommand");
 
-		// service is starting, due to a call to startService()
+		// have timer that gets position at every set interval
 		if (!isRunning) {
 			timer.scheduleAtFixedRate(new TimerTask() {
 				public void run() {

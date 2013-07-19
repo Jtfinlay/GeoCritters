@@ -1,6 +1,8 @@
 package com.finlay.geomonsters;
 
 import java.net.MalformedURLException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,15 +18,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -40,6 +39,8 @@ public class MainActivity extends Activity implements LocationListenerParent {
 	private static final String TAG = "MainActivity";
 
 	private static final String URL = "http://204.191.142.13:8000/";
+	
+	private static final long SERVER_CONNECTION_TIME = 5000;
 
 	private Button forceButton = null;
 	private Button waitButton = null;
@@ -48,6 +49,7 @@ public class MainActivity extends Activity implements LocationListenerParent {
 	private SocketIO socket;
 	private WeatherManager weatherManager = null;
 	private Weather weatherData = null;
+	private Timer timer;
 	
 	// TODO: These are for the 'force button,' so should eventually get rid of
 	private LocationManager locationManager;

@@ -60,7 +60,9 @@ public class MyIOCallback implements IOCallback {
 	public void onError(SocketIOException arg0) {
 		Log.v(TAG, "onError " + arg0.getMessage());
 		arg0.printStackTrace();
-
+		
+		if (arg0.getMessage().equals("Error while handshaking"))
+			_mainActivity.appendMessage("Could not connect to server.");
 	}
 
 	@Override
