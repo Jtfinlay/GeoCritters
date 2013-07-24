@@ -16,6 +16,8 @@ import com.finlay.geomonsters.battle.ResourceManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -89,8 +91,15 @@ public class MainActivity extends Activity implements LocationListenerParent {
 			@Override
 			public void onClick(View arg0) {
 				Log.v(TAG, "Force Click");
-				forceButton.setText("...");
 
+				// Ensure connected
+				if (!isNetworkAvailable()) {
+					setMessage("No internet connection.");
+					return;
+				}
+				
+				forceButton.setText("...");
+				
 				// Connect to server
 				connectSocket();
 
@@ -126,6 +135,12 @@ public class MainActivity extends Activity implements LocationListenerParent {
 			@Override
 			public void onClick(View arg0) {
 				Log.v(TAG, "Load encounter clicked");
+				
+				// Ensure connection
+				if (!isNetworkAvailable()) {
+					setMessage("No internet connection.");
+					return;
+				}				
 				
 				// Pull encounter
 				String encounter = ConfigManager.PullEncounter(getApplicationContext());
@@ -215,6 +230,15 @@ public class MainActivity extends Activity implements LocationListenerParent {
 			}
 		});
 	}
+	public void setMessage(final String s) {
+		// append string as new line to the TextView.
+		// Since TextView is part of UI, we need to have another thread queue the action
+		runOnUiThread(new Runnable() {
+			public void run() {
+				theTextView.setText(s + "\n");
+			}
+		});
+	}
 
 	public void LocationChanged(Location loc) {
 		// LocationManager has received GPS location
@@ -280,6 +304,13 @@ public class MainActivity extends Activity implements LocationListenerParent {
 		// ensure server connected
 		while (!socket.isConnected()) ;
 		sendLocation("" + loc.getLongitude(), "" + loc.getLatitude());
+	}
+	
+	private boolean isNetworkAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 }
 
