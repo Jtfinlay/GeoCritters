@@ -6,6 +6,11 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+/**
+ * Cannot have interface that extends SurfaceView, so this class acts the same way.
+ * @author James
+ *
+ */
 public class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	public DrawingPanel(Context context, AttributeSet attrs) {
