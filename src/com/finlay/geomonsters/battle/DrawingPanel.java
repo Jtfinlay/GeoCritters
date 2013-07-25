@@ -1,6 +1,6 @@
 package com.finlay.geomonsters.battle;
 
-import com.finlay.geomonsters.R;
+import com.finlay.geomonsters.*;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,7 +17,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 /*----- The drawing surface -----*/
-class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
+class BattleDrawingPanel extends DrawingPanel {
 
 	private static final String TAG = "DrawingPanel";
 
@@ -45,7 +45,7 @@ class DrawingPanel extends SurfaceView implements SurfaceHolder.Callback {
 
 	private int canvas_width, canvas_height;						// Canvas dimensions
 
-	public DrawingPanel(Context context, AttributeSet attributeSet) {
+	public BattleDrawingPanel(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
 
 		getHolder().addCallback(this);

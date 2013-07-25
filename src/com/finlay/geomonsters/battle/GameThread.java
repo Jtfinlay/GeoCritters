@@ -1,5 +1,7 @@
 package com.finlay.geomonsters.battle;
 
+import com.finlay.geomonsters.DrawingPanel;
+
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;

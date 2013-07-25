@@ -25,7 +25,7 @@ public class BattleActivity extends FragmentActivity implements ChooseCreatureDi
 	private static final String TAG = "BattleActivity";
 
 	private Button btn1, btn2, btn3, btn4;
-	private DrawingPanel drawingPanel;
+	private BattleDrawingPanel drawingPanel;
 	private RelativeLayout	bottomPanel;
 	private LinearLayout btnPanel;
 	private TextWriter msgPanel;
@@ -60,7 +60,7 @@ public class BattleActivity extends FragmentActivity implements ChooseCreatureDi
 
 		btnPanel = (LinearLayout) findViewById(R.id.Buttons);				// Contains buttons on bottom panel
 		msgPanel = (TextWriter) findViewById(R.id.MessageView);				// Scrolls text to bottom panel
-		drawingPanel = (DrawingPanel) findViewById(R.id.BattleView);		// Main drawing canvas
+		drawingPanel = (BattleDrawingPanel) findViewById(R.id.BattleView);		// Main drawing canvas
 		bottomPanel = (RelativeLayout) findViewById(R.id.Bottom_Panel);		// Bottom panel containing buttons and text
 
 		msgPanel.setCharacterDelay(50);										// set Text scroll speed
