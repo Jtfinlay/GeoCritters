@@ -122,6 +122,8 @@ public class WeatherManager extends AsyncTask<Object, Void, Weather>{
 
 		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
 		}
 
 		Log.v(TAG, "Send weather data.");

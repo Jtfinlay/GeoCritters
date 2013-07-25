@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements LocationListenerParent {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		// layout
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_ranch);
 
 		// Socket, Location Manager, Weather Manager
 		locationListener = new MyLocationListener(this);
@@ -288,7 +288,10 @@ public class MainActivity extends Activity implements LocationListenerParent {
 		Log.v(TAG, "Weather data received.");
 		weatherData = weather;
 		appendMessage("Weather data received.");
-		if (weatherData == null) Log.v(TAG, "Returned null :(");
+		if (weatherData == null) {
+			Log.v(TAG, "Weather data returned null");
+			setMessage("Could not connect to weather service.");
+		}
 	}
 
 	//TODO: Once battle is done, get rid of this? We probably only want
@@ -300,7 +303,9 @@ public class MainActivity extends Activity implements LocationListenerParent {
 		String s = "F: " + loc.getLatitude() + ", " + loc.getLongitude();
 		Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
 
+		
 		weatherManager.execute(""+loc.getLongitude(), ""+loc.getLatitude(), true);
+		
 		// ensure server connected
 		while (!socket.isConnected()) ;
 		sendLocation("" + loc.getLongitude(), "" + loc.getLatitude());
