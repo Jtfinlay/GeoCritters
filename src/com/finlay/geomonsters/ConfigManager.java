@@ -177,4 +177,6 @@ public class ConfigManager {
 		Log.v(TAG, "Reset config files.");
 		context.deleteFile(FILE_ENCOUNTERQUEUE);
 	}
+
+	
 }

@@ -42,16 +42,14 @@ public class BattleActivity extends FragmentActivity implements ChooseCreatureDi
 
 		// set app to fullscreen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		/*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-*/
+		
 		// get the Battle layout
 		setContentView(R.layout.battle);
 		
 		// Get information sent by prior activity
 		Intent intent = getIntent();
 		String enemyName = intent.getStringExtra("ENEMYNAME");
-		
+
 		// Layout items
 		btn1 = (Button) findViewById(R.id.button1);
 		btn2 = (Button) findViewById(R.id.button2);
@@ -190,7 +188,7 @@ public class BattleActivity extends FragmentActivity implements ChooseCreatureDi
 		
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			
+			Log.v(TAG, "onTouch");
 			// clickDelay stops a long touch from being read as two touches
 			if (System.currentTimeMillis() - clickLast < clickDelay)
 				return false;

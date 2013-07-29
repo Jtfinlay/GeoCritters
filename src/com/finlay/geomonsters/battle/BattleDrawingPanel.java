@@ -19,7 +19,7 @@ import android.view.SurfaceView;
 /*----- The drawing surface -----*/
 class BattleDrawingPanel extends DrawingPanel {
 
-	private static final String TAG = "DrawingPanel";
+	private static final String TAG = "BattleDrawingPanel";
 
 	private BattleActivity _parent;									// Parent activity
 	private GameThread _Thread;										// Game Thread
@@ -161,11 +161,6 @@ class BattleDrawingPanel extends DrawingPanel {
 	}
 
 	/** TOUCH EVENTS **/
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent e) {
-		return false;
-	}
 
 	public boolean sendTouchEvent(MotionEvent e) {
 		Log.v(TAG, "onTouch");

@@ -71,6 +71,7 @@ public class GameThread extends Thread {
 						framesSkipped++;
 					}
 				}
+			} catch (Exception e) { Log.e(TAG, "Error: " + e.getMessage());
 			} finally {
 				if (c != null) {
 					_surfaceHolder.unlockCanvasAndPost(c);
