@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
+import android.util.Log;
 
 public class Grid {
 
@@ -17,20 +18,31 @@ public class Grid {
 
 	private char[][] grid_matrix;
 
-	public Grid() {
-		// TODO: load grid from internal storage file.
-		// TODO: if no grid exists, get user to give location. Generate grid from mapping data
-
-		// For now, just create a basic grid_matrix.
+	public Grid(boolean makeNew) {
 		grid_matrix = new char[GRID_COLUMN_COUNT][GRID_ROW_COUNT];
-		for (int col=0; col<GRID_COLUMN_COUNT; col++)
-			for (int row=0; row<GRID_ROW_COUNT; row++)
-				if (row < 10 || row > 30)
-					grid_matrix[col][row] = 'b';
-				else
-					grid_matrix[col][row] = 'g';
+		
+		if (makeNew) {
+			// For now, just create a basic grid_matrix.
+			for (int col=0; col<GRID_COLUMN_COUNT; col++)
+				for (int row=0; row<GRID_ROW_COUNT; row++)
+					if (row < 10 || row > 30)
+						grid_matrix[col][row] = 'b';
+					else
+						grid_matrix[col][row] = 'g';
+		}
 	}
-	
+	public void set(char[][] matrix) {
+		for (char[] line : matrix) {
+			for (char item : line)
+				Log.v(TAG, "Item: " + item);
+			Log.v(TAG, "newline");
+		}
+		grid_matrix = matrix;
+	}
+	public char[][] getGrid() {
+		return grid_matrix;
+	}
+
 	public int getWidth() {
 		return GRID_COLUMN_COUNT * GRID_SIZE;
 	}

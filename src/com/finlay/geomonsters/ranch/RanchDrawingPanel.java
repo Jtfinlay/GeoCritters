@@ -35,7 +35,7 @@ public class RanchDrawingPanel extends DrawingPanel {
 		getHolder().addCallback(this);
 
 		_paint = new Paint();
-		_grid = new Grid();
+		_grid = ConfigManager.GetRanchGrid(getContext());
 		_Thread = new GameThread(getHolder(), this);
 
 		setFocusable(true);
@@ -112,10 +112,8 @@ public class RanchDrawingPanel extends DrawingPanel {
 	/** TOUCH EVENTS **/
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		Log.v(TAG, "Touch event");
-		int action = e.getActionMasked();
 		
-		switch (action) {
+		switch (e.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			prevX = e.getX();
 			prevY = e.getY();
