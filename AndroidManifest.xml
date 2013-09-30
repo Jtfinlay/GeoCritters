@@ -7,10 +7,10 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -19,8 +19,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.finlay.geomonsters.MainActivity"
-            android:screenOrientation="landscape"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,15 +29,21 @@
         </activity>
         <activity
             android:name="com.finlay.geomonsters.battle.BattleActivity"
-            android:screenOrientation="landscape"
-            android:label="@string/app_name" >
-            
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
         </activity>
-        <service 
-            android:name="EncounterService"
-            android:process=":geocritter_service"
+
+        <service
+            android:name="com.finlay.geomonsters.EncounterService"
             android:icon="@drawable/ic_launcher"
-            android:label="Geocritters Location Service"></service>
+            android:label="Geocritters Location Service"
+            android:process=":geocritter_service" >
+        </service>
+
+        <activity
+            android:name="com.finlay.geomonsters.WetlandVariables_Activity"
+            android:label="@string/title_activity_wetland_variables_" >
+        </activity>
     </application>
 
 </manifest>

@@ -3,5 +3,7 @@
 
     <string name="app_name">GeoCritters</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_wetland_variables_">WetlandVariables_Activity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
